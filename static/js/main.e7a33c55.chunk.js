@@ -19040,17 +19040,7 @@
             },
             {
               q: "How much will it cost?",
-              a: Object(Ul.jsxs)(Ul.Fragment, {
-                children: [
-                  "Nothing! And no ads, either... enjoy this as a respite from run-away capitalism. However, keeping the game online relies upon kind ",
-                  Object(Ul.jsx)("a", {
-                    className: "about-link",
-                    href: "https://ko-fi.com/slowroads",
-                    children: "donations",
-                  }),
-                  ", so anything you might be able to contribute would go a long way to supporting it.",
-                ],
-              }),
+              a: "Nothing! And no ads, either... enjoy this as a respite from run-away capitalism.",
             },
             {
               q: "Will there ever be a competitive mode?",
@@ -19263,25 +19253,7 @@
                     Object(Ul.jsxs)("div", {
                       id: "splash-footer",
                       children: [
-                        Object(Ul.jsxs)("div", {
-                          className: "splash-footer-link",
-                          children: [
-                            Object(Ul.jsx)("div", {
-                              id: "donate-please",
-                              children: "donations keep the game running!",
-                            }),
-                            Object(Ul.jsxs)("a", {
-                              id: "donate",
-                              href: "https://ko-fi.com/slowroads",
-                              target: "_blank",
-                              rel: "noopener noreferrer",
-                              children: [
-                                "donate",
-                                Object(Ul.jsx)("span", { className: "outlink" }),
-                              ],
-                            }),
-                          ],
-                        }),
+                        
                         Object(Ul.jsx)("div", {
                           className: "splash-footer-link",
                           children: Object(Ul.jsxs)("a", {
@@ -19401,15 +19373,7 @@
                               "After 16 months of full-time development, the initial goals for this project have been fulfilled, and so I'm considering it to be complete. That said, there are many features which didn't make the priority list for version 1. If there is interest, I would love to continue developing these features into the future.",
                               Object(Ul.jsx)("br", {}),
                               Object(Ul.jsx)("br", {}),
-                              "I'm committed to keeping Slow Roads freely available and free from adverts, but I don't have the financial capacity to keep the servers running by myself. If you would like to keep the game alive, a kind ",
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "https://ko-fi.com/slowroads",
-                                target: "_blank",
-                                rel: "noopener noreferrer",
-                                children: "donation",
-                              }),
-                              " would be greatly appreciated. Let me know which of the features below you would like to see most!",
+                              "Let me know which of the features below you would like to see most!",
                               Object(Ul.jsx)("br", {}),
                               Object(Ul.jsx)("br", {}),
                               Object(Ul.jsx)("div", {
@@ -19445,13 +19409,7 @@
                                 href: "https://discord.gg/t2UWVKcy3z",
                                 children: "discord server",
                               }),
-                              " to suggest new ideas. Supporters on ",
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "https://ko-fi.com/slowroads",
-                                children: "ko-fi",
-                              }),
-                              " get early access and priority requests!",
+                              " to suggest new ideas!",
                             ],
                           }),
                         }),
@@ -19511,76 +19469,7 @@
                             ),
                           }),
                         }),
-                        Object(Ul.jsx)("div", {
-                          className: "splash-topo-divider",
-                          children: Object(Ul.jsx)("div", {
-                            className: "splash-topo-header",
-                            children: "Archived Versions",
-                          }),
-                        }),
-                        Object(Ul.jsx)("div", {
-                          className: "about-content",
-                          children: Object(Ul.jsxs)("div", {
-                            className: "splash-about-text",
-                            children: [
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.6/",
-                                children: "v1.0.0-beta.6",
-                              }),
-                              " - 31st March",
-                              Object(Ul.jsx)("br", {}),
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.7/",
-                                children: "v1.0.0-beta.7",
-                              }),
-                              " - 20th April",
-                              Object(Ul.jsx)("br", {}),
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.8/",
-                                children: "v1.0.0-beta.8",
-                              }),
-                              " - 10th May",
-                              Object(Ul.jsx)("br", {}),
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.9/",
-                                children: "v1.0.0-beta.9",
-                              }),
-                              " - 31st May",
-                              Object(Ul.jsx)("br", {}),
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.10/",
-                                children: "v1.0.0-beta.10",
-                              }),
-                              " - 21st July",
-                              Object(Ul.jsx)("br", {}),
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.11/",
-                                children: "v1.0.0-beta.11",
-                              }),
-                              " - 4th October",
-                              Object(Ul.jsx)("br", {}),
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.12/",
-                                children: "v1.0.0-beta.12",
-                              }),
-                              " - 12th October",
-                              Object(Ul.jsx)("br", {}),
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.13/",
-                                children: "v1.0.0-beta.13",
-                              }),
-                              " - 16th October",
-                            ],
-                          }),
-                        }),
+                        
                       ],
                     }),
                     null == Pr.value
@@ -20726,36 +20615,7 @@
               })
             );
           },
-          ic = () =>
-            Object(Ul.jsxs)("a", {
-              href: "https://ko-fi.com/slowroads",
-              target: "_blank",
-              rel: "noreferrer",
-              title: "Support development on Ko-fi!",
-              className: "menu-item",
-              style: {
-                padding: "0px 12px",
-                width: "auto",
-                textAlign: "right",
-                display: "flex",
-              },
-              children: [
-                Object(Ul.jsx)("img", {
-                  alt: "",
-                  style: {
-                    height: "50%",
-                    marginTop: "25px",
-                    marginRight: "8px",
-                    transform: "translateY(-50%)",
-                  },
-                  src: Sd,
-                }),
-                Object(Ul.jsx)("div", {
-                  style: { fontSize: "14px", color: "#fff" },
-                  children: "donate",
-                }),
-              ],
-            }),
+          ic = () => null,
           sc = () => {
             const [e, t] = Object(s.useState)(jr.value.input),
               [i, a] = Object(s.useState)(1);
