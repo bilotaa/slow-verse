@@ -19040,17 +19040,7 @@
             },
             {
               q: "How much will it cost?",
-              a: Object(Ul.jsxs)(Ul.Fragment, {
-                children: [
-                  "Nothing! And no ads, either... enjoy this as a respite from run-away capitalism. However, keeping the game online relies upon kind ",
-                  Object(Ul.jsx)("a", {
-                    className: "about-link",
-                    href: "https://ko-fi.com/slowroads",
-                    children: "donations",
-                  }),
-                  ", so anything you might be able to contribute would go a long way to supporting it.",
-                ],
-              }),
+              a: "Nothing! And no ads, either... enjoy this as a respite from run-away capitalism.",
             },
             {
               q: "Will there ever be a competitive mode?",
