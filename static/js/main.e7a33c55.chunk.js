@@ -19253,25 +19253,7 @@
                     Object(Ul.jsxs)("div", {
                       id: "splash-footer",
                       children: [
-                        Object(Ul.jsxs)("div", {
-                          className: "splash-footer-link",
-                          children: [
-                            Object(Ul.jsx)("div", {
-                              id: "donate-please",
-                              children: "donations keep the game running!",
-                            }),
-                            Object(Ul.jsxs)("a", {
-                              id: "donate",
-                              href: "https://ko-fi.com/slowroads",
-                              target: "_blank",
-                              rel: "noopener noreferrer",
-                              children: [
-                                "donate",
-                                Object(Ul.jsx)("span", { className: "outlink" }),
-                              ],
-                            }),
-                          ],
-                        }),
+                        
                         Object(Ul.jsx)("div", {
                           className: "splash-footer-link",
                           children: Object(Ul.jsxs)("a", {
