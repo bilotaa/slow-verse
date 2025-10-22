@@ -19373,15 +19373,7 @@
                               "After 16 months of full-time development, the initial goals for this project have been fulfilled, and so I'm considering it to be complete. That said, there are many features which didn't make the priority list for version 1. If there is interest, I would love to continue developing these features into the future.",
                               Object(Ul.jsx)("br", {}),
                               Object(Ul.jsx)("br", {}),
-                              "I'm committed to keeping Slow Roads freely available and free from adverts, but I don't have the financial capacity to keep the servers running by myself. If you would like to keep the game alive, a kind ",
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "https://ko-fi.com/slowroads",
-                                target: "_blank",
-                                rel: "noopener noreferrer",
-                                children: "donation",
-                              }),
-                              " would be greatly appreciated. Let me know which of the features below you would like to see most!",
+                              "Let me know which of the features below you would like to see most!",
                               Object(Ul.jsx)("br", {}),
                               Object(Ul.jsx)("br", {}),
                               Object(Ul.jsx)("div", {
