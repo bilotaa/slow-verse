@@ -19469,76 +19469,7 @@
                             ),
                           }),
                         }),
-                        Object(Ul.jsx)("div", {
-                          className: "splash-topo-divider",
-                          children: Object(Ul.jsx)("div", {
-                            className: "splash-topo-header",
-                            children: "Archived Versions",
-                          }),
-                        }),
-                        Object(Ul.jsx)("div", {
-                          className: "about-content",
-                          children: Object(Ul.jsxs)("div", {
-                            className: "splash-about-text",
-                            children: [
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.6/",
-                                children: "v1.0.0-beta.6",
-                              }),
-                              " - 31st March",
-                              Object(Ul.jsx)("br", {}),
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.7/",
-                                children: "v1.0.0-beta.7",
-                              }),
-                              " - 20th April",
-                              Object(Ul.jsx)("br", {}),
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.8/",
-                                children: "v1.0.0-beta.8",
-                              }),
-                              " - 10th May",
-                              Object(Ul.jsx)("br", {}),
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.9/",
-                                children: "v1.0.0-beta.9",
-                              }),
-                              " - 31st May",
-                              Object(Ul.jsx)("br", {}),
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.10/",
-                                children: "v1.0.0-beta.10",
-                              }),
-                              " - 21st July",
-                              Object(Ul.jsx)("br", {}),
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.11/",
-                                children: "v1.0.0-beta.11",
-                              }),
-                              " - 4th October",
-                              Object(Ul.jsx)("br", {}),
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.12/",
-                                children: "v1.0.0-beta.12",
-                              }),
-                              " - 12th October",
-                              Object(Ul.jsx)("br", {}),
-                              Object(Ul.jsx)("a", {
-                                className: "about-link",
-                                href: "http://slowroads.io/1.0.0-beta.13/",
-                                children: "v1.0.0-beta.13",
-                              }),
-                              " - 16th October",
-                            ],
-                          }),
-                        }),
+                        
                       ],
                     }),
                     null == Pr.value
