@@ -20684,36 +20684,7 @@
               })
             );
           },
-          ic = () =>
-            Object(Ul.jsxs)("a", {
-              href: "https://ko-fi.com/slowroads",
-              target: "_blank",
-              rel: "noreferrer",
-              title: "Support development on Ko-fi!",
-              className: "menu-item",
-              style: {
-                padding: "0px 12px",
-                width: "auto",
-                textAlign: "right",
-                display: "flex",
-              },
-              children: [
-                Object(Ul.jsx)("img", {
-                  alt: "",
-                  style: {
-                    height: "50%",
-                    marginTop: "25px",
-                    marginRight: "8px",
-                    transform: "translateY(-50%)",
-                  },
-                  src: Sd,
-                }),
-                Object(Ul.jsx)("div", {
-                  style: { fontSize: "14px", color: "#fff" },
-                  children: "donate",
-                }),
-              ],
-            }),
+          ic = () => null,
           sc = () => {
             const [e, t] = Object(s.useState)(jr.value.input),
               [i, a] = Object(s.useState)(1);
