@@ -19238,11 +19238,6 @@
                           onBegin: e,
                         })
                       : Object(Ul.jsx)($l, {}),
-                    Object(Ul.jsxs)("a", {
-                      id: "splash-about",
-                      href: "#about",
-                      children: ["about", Object(Ul.jsx)("br", {}), "\u25be"],
-                    }),
                     Object(Ul.jsxs)("div", {
                       id: "splash-footer",
                       children: [
