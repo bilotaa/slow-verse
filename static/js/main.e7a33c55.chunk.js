@@ -19209,19 +19209,10 @@
                 Object(Ul.jsxs)("div", {
                   id: "home",
                   children: [
-                    Object(Ul.jsx)("div", {
+                    Object(Ul.jsx)("img", {
                       id: "splash-logo",
-                      children: "SPEEDVERSE",
-                      style: {
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        height: "24vh",
-                        fontSize: "6vh",
-                        fontWeight: "bold",
-                        letterSpacing: "0.3em",
-                        color: "#ffffff"
-                      }
+                      src: Yl,
+                      alt: "Speedverse Logo",
                     }),
                     Object(Ul.jsx)("div", {
                       id: "splash-header",
