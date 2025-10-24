@@ -19240,7 +19240,7 @@
                     }),
                     Object(Ul.jsx)("div", {
                       id: "splash-header",
-                      children: "slow roads",
+                      children: "SPEED VERSE",
                     }),
                     Object(Ul.jsx)("div", {
                       id: "splash-subheader",
