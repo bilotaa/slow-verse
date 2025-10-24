@@ -582,7 +582,7 @@ body {
     display: none;
   }
   #splash-logo {
-    height: 35vh; max-width: 80vw; margin-top: 2vh; margin-bottom: 3vh;
+    height: 22vh; max-width: 60vw; margin-top: 1vh; margin-bottom: 1.5vh;
   }
   #splash-header {
     font-size: 6vh;
