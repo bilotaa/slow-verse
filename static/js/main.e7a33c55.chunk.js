@@ -19238,23 +19238,6 @@
                           onBegin: e,
                         })
                       : Object(Ul.jsx)($l, {}),
-                    Object(Ul.jsxs)("div", {
-                      id: "splash-footer",
-                      children: [
-                        
-                        Object(Ul.jsx)("div", {
-                          className: "splash-footer-link",
-                          children: Object(Ul.jsxs)("a", {
-                            className: "splash-link",
-                            href: "https://discord.gg/s8XPAAj",
-                            children: [
-                              "discord",
-                              Object(Ul.jsx)("span", { className: "outlink" }),
-                            ],
-                          }),
-                        }),
-                      ],
-                    }),
                   ],
                 }),
                 Object(Ul.jsxs)("div", {
