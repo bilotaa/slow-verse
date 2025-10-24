@@ -19209,7 +19209,6 @@
                 Object(Ul.jsxs)("div", {
                   id: "home",
                   children: [
-                    Object(Ul.jsx)("div", { id: "splash-version", children: Ui }),
                     Object(Ul.jsxs)("a", {
                       id: "splash-anslo",
                       href: "https://twitter.com/anslogen",
