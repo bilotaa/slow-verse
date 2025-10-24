@@ -19209,20 +19209,6 @@
                 Object(Ul.jsxs)("div", {
                   id: "home",
                   children: [
-                    Object(Ul.jsxs)("a", {
-                      id: "splash-anslo",
-                      href: "https://twitter.com/anslogen",
-                      target: "_blank",
-                      rel: "noopener noreferrer",
-                      children: [
-                        Object(Ul.jsx)("img", {
-                          src: Ql,
-                          id: "splash-anslo-img",
-                          alt: "",
-                        }),
-                        Object(Ul.jsx)("div", { children: "from anslo.dev" }),
-                      ],
-                    }),
                     Object(Ul.jsx)("div", {
                       id: "splash-logo",
                       children: "SPEEDVERSE",
