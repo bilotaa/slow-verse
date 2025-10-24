@@ -19209,34 +19209,10 @@
                 Object(Ul.jsxs)("div", {
                   id: "home",
                   children: [
-                    Object(Ul.jsx)("div", { id: "splash-version", children: Ui }),
-                    Object(Ul.jsxs)("a", {
-                      id: "splash-anslo",
-                      href: "https://twitter.com/anslogen",
-                      target: "_blank",
-                      rel: "noopener noreferrer",
-                      children: [
-                        Object(Ul.jsx)("img", {
-                          src: Ql,
-                          id: "splash-anslo-img",
-                          alt: "",
-                        }),
-                        Object(Ul.jsx)("div", { children: "from anslo.dev" }),
-                      ],
-                    }),
-                    Object(Ul.jsx)("div", {
+                    Object(Ul.jsx)("img", {
                       id: "splash-logo",
-                      children: "SPEEDVERSE",
-                      style: {
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        height: "24vh",
-                        fontSize: "6vh",
-                        fontWeight: "bold",
-                        letterSpacing: "0.3em",
-                        color: "#ffffff"
-                      }
+                      src: Yl,
+                      alt: "Speedverse Logo",
                     }),
                     Object(Ul.jsx)("div", {
                       id: "splash-header",
@@ -19253,28 +19229,6 @@
                           onBegin: e,
                         })
                       : Object(Ul.jsx)($l, {}),
-                    Object(Ul.jsxs)("a", {
-                      id: "splash-about",
-                      href: "#about",
-                      children: ["about", Object(Ul.jsx)("br", {}), "\u25be"],
-                    }),
-                    Object(Ul.jsxs)("div", {
-                      id: "splash-footer",
-                      children: [
-                        
-                        Object(Ul.jsx)("div", {
-                          className: "splash-footer-link",
-                          children: Object(Ul.jsxs)("a", {
-                            className: "splash-link",
-                            href: "https://discord.gg/s8XPAAj",
-                            children: [
-                              "discord",
-                              Object(Ul.jsx)("span", { className: "outlink" }),
-                            ],
-                          }),
-                        }),
-                      ],
-                    }),
                   ],
                 }),
                 Object(Ul.jsxs)("div", {
