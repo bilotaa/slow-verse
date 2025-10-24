@@ -19273,6 +19273,7 @@
                             Object(Ul.jsxs)("div", {
                               className: "splash-nav",
                               children: [
+                                Object(Ul.jsx)("img", { className: "splash-nav-logo", src: Yl, alt: "Speedverse Logo", onClick: function() { document.getElementById("splash-container").scrollTo(0, 0); } }),
                                 Object(Ul.jsx)("a", {
                                   className: "splash-nav-item",
                                   href: "#background",
