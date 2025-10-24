@@ -12472,7 +12472,7 @@
         var Tr = new (class extends l {})(),
           Pr = new l(null);
         const Gr = "initialise",
-          Br = "feedback",
+          
           Er = "analytics_returningPlayer",
           Zr = "analytics_totalTime",
           Wr = "analytics_totalDist",
@@ -19003,7 +19003,7 @@
           Fl = i.p + "static/media/u_turn.38a08a9e.svg",
           Hl = (i(42), i.p + "static/media/no_mobile_1.959d982f.svg"),
           Ql = i.p + "static/media/anslo_ico.77ddc9f9.svg",
-          Yl = i.p + "static/media/speedverse-logo.png",
+          Yl = i.p + "new logo.png",
           Ul = i(0);
         const Vl = [
             {
