@@ -19003,7 +19003,7 @@
           Fl = i.p + "static/media/u_turn.38a08a9e.svg",
           Hl = (i(42), i.p + "static/media/no_mobile_1.959d982f.svg"),
           Ql = i.p + "static/media/anslo_ico.77ddc9f9.svg",
-          Yl = i.p + "new logo.png",
+          Yl = i.p + "static/media/new-logo.png",
           Ul = i(0);
         const Vl = [
             {
@@ -19273,6 +19273,7 @@
                             Object(Ul.jsxs)("div", {
                               className: "splash-nav",
                               children: [
+                                Object(Ul.jsx)("img", { className: "splash-nav-logo", src: Yl, alt: "Speedverse Logo", onClick: function() { document.getElementById("splash-container").scrollTo(0, 0); } }),
                                 Object(Ul.jsx)("a", {
                                   className: "splash-nav-item",
                                   href: "#background",
@@ -21607,7 +21608,7 @@
                         id: "game-paused",
                         children: Object(Ul.jsx)("div", {
                           className: "game-paused-main",
-                          children: "PAUSED",
+                          children: Object(Ul.jsx)("img", { className: "game-paused-logo", src: Yl, alt: "Speedverse Logo" }),
                         }),
                       }),
                       Object(Ul.jsx)(yc, {}),
