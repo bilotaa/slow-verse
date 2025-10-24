@@ -19244,7 +19244,7 @@
                     }),
                     Object(Ul.jsx)("div", {
                       id: "splash-subheader",
-                      children: "endless driving zen",
+                      children: "ENDLESS SPEED THRILLS",
                     }),
                     t
                       ? Object(Ul.jsx)(_l, {
