@@ -19003,7 +19003,7 @@
           Fl = i.p + "static/media/u_turn.38a08a9e.svg",
           Hl = (i(42), i.p + "static/media/no_mobile_1.959d982f.svg"),
           Ql = i.p + "static/media/anslo_ico.77ddc9f9.svg",
-          Yl = i.p + "static/media/Myth_Gaming_Logo_Vector_AI-removebg-preview.png",
+          Yl = i.p + "static/media/speedverse-logo.png",
           Ul = i(0);
         const Vl = [
             {
