@@ -21607,7 +21607,7 @@
                         id: "game-paused",
                         children: Object(Ul.jsx)("div", {
                           className: "game-paused-main",
-                          children: "PAUSED",
+                          children: Object(Ul.jsx)("img", { className: "game-paused-logo", src: Yl, alt: "Speedverse Logo" }),
                         }),
                       }),
                       Object(Ul.jsx)(yc, {}),
