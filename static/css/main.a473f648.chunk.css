@@ -587,7 +587,7 @@ body {
   #splash-header {
     font-size: 6vh;
     letter-spacing: 0.3em;
-    display: inline-block;
+    display: inline-block; margin-bottom: 2vh;
   }
   #splash-subheader {
     margin-top: 1vh;
