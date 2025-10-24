@@ -19224,11 +19224,19 @@
                         Object(Ul.jsx)("div", { children: "from anslo.dev" }),
                       ],
                     }),
-                    Object(Ul.jsx)("div", { id: "splash-logo-placeholder" }),
-                    Object(Ul.jsx)("img", {
+                    Object(Ul.jsx)("div", {
                       id: "splash-logo",
-                      src: Yl,
-                      alt: "",
+                      children: "SPEEDVERSE",
+                      style: {
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        height: "24vh",
+                        fontSize: "6vh",
+                        fontWeight: "bold",
+                        letterSpacing: "0.3em",
+                        color: "#ffffff"
+                      }
                     }),
                     Object(Ul.jsx)("div", {
                       id: "splash-header",
