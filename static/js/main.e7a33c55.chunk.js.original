@@ -3725,7 +3725,7 @@
             emissive: 16777215,
             emissiveIntensity: 0.2,
           }),
-          black: new r.D({ color: 6710886, flatShading: !0 }),
+          black: new r.D({ color: 3355443, flatShading: !0 }),
           reflect: new r.D({
             color: 16720418,
             emissive: 16720418,
@@ -10835,7 +10835,7 @@
           },
           Dh = i.p + "static/media/marsmarker.6a313c62.obj";
         const Mh = {
-          black: new r.D({ color: 8943462 }),
+          black: new r.D({ color: 5588019 }),
           reflect: new r.D({
             color: 2293725,
             emissive: 2293725,
@@ -10852,7 +10852,7 @@
           },
           jh = i.p + "static/media/marsbarrier.c460e93d.obj";
         const Ch = {
-          black: new r.D({ color: 8943462 }),
+          black: new r.D({ color: 5588019 }),
           reflect: new r.D({
             color: 2293725,
             emissive: 2293725,
@@ -16779,7 +16779,7 @@
             grey: new r.D({ color: 5592405 }),
             wheel: new r.D({ color: 4473924 }),
             white: new r.D({ color: 15658734 }),
-            black: new r.D({ color: 6710886 }),
+            black: new r.D({ color: 3355443 }),
             tire: new r.D({ color: 2236962 }),
             body: new r.F({ color: 16316664, roughness: 0.5 }),
             map: new r.F({ color: 16777215, roughness: 0.5, map: F(null) }),
