@@ -14964,7 +14964,7 @@
               for (i of s.deadTiles) {
                 let e = i[0],
                   t = i[1];
-                e in this.seenCells && this.seenCells[e][t] < s.originIndex
+                e in this.seenCells && this.seenCells[e][t] <= s.originIndex
                   ? (this.retireCell(e, t),
                     wo[e] &&
                       (delete wo[e][t],
