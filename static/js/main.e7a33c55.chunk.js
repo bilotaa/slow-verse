@@ -17283,6 +17283,16 @@
               (this.pdT = e),
               (Ke.vehicleIndexDidChange = !1),
               this.updateVehicleNode();
+            if (z.carBodyPlane) {
+              const steerNorm = this.inputs.steer / (z.metrics.maxSteer || 1);
+              const accelInput = this.inputs.accel || 0;
+              const brakeInput = this.inputs.brake || 0;
+              const targetRoll = steerNorm * 0.15;
+              const targetPitch = (brakeInput - accelInput) * 0.1;
+              const lerpFactor = Math.min(1, 15 * e);
+              z.carBodyPlane.rotation.z = z.carBodyPlane.rotation.z * (1 - lerpFactor) + targetRoll * lerpFactor;
+              z.carBodyPlane.rotation.x = z.carBodyPlane.rotation.x * (1 - lerpFactor) + targetPitch * lerpFactor;
+            }
             try {
               this.audio.update(e);
             } catch (Tc) {
