@@ -808,6 +808,7 @@
             let s = P.load(e);
             return (s.wrapS = i), (s.wrapT = i), (s.anisotropy = t), s;
           },
+          carSupraTexture = P.load(i.p + "static/media/car-supra.png"),
           B = (e, t = {}) => {
             for (let i in t) e.userData[i] = { value: t[i] };
             return (
