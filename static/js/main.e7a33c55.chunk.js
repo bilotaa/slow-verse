@@ -3277,7 +3277,7 @@
                   treesb: [zt, Ct],
                   grass: Ot,
                   bush: Lt,
-                  grassColouration: [60 / 255, 25 / 255, 45 / 255, 0],
+                  grassColouration: [85 / 255, 75 / 255, 50 / 255, 0],
                   treeColouration: [0.1, -0.05, 0, 0],
                 },
               },
