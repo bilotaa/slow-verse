@@ -13893,7 +13893,8 @@
               let e = new lo(100);
               this.container.add(e.mesh), this.nearSegs.push(e);
             }
-            this.nearSegs[1].initialise(Ke.head),
+            this.nearSegs[2].initialise(Ke.head),
+              this.nearSegs[1].initialise(this.nearSegs[2].genNode),
               this.nearSegs[0].initialise(this.nearSegs[1].genNode),
               this.nearSegs[3].initGeneration(this.nearSegs[0].genNode);
           }
