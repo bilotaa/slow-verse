@@ -17074,21 +17074,17 @@
               let t = Object.keys(e.skins)[0];
               for (let i in e.skins[t]) n[i].color.setHex(e.skins[t][i]);
             }
-            a.load(i.default, (e) => {
-              e.traverse((e) => {
-                if (e.isMesh) {
-                  let t = Cl.default,
-                    i = e.name.split("_")[1];
-                  i in Cl && (t = Cl[i]),
-                    (e.material = t),
-                    "shadow" == i && (e.castShadow = !0);
-                }
-              }),
-                this.positionHeadlights(),
-                this.updateHeadlights(),
-                (e.rotation.y = -Math.PI / 2),
-                z.geo.add(e);
-            }),
+            const planeGeo = new r.I(3.0, 1.5);
+            const carPlaneMesh = new r.B(planeGeo, Cl.imagePlane);
+            carPlaneMesh.rotation.y = -Math.PI / 2;
+            carPlaneMesh.name = "carBodyPlane";
+            carPlaneMesh.renderOrder = 1;
+            carPlaneMesh.castShadow = !1;
+            carPlaneMesh.receiveShadow = !0;
+            z.carBodyPlane = carPlaneMesh;
+            this.positionHeadlights();
+            this.updateHeadlights();
+            z.geo.add(carPlaneMesh);
               a.load(s.default, (t) => {
                 t.traverse((e) => {
                   if (e.isMesh) {
