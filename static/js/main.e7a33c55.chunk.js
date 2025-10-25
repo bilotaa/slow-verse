@@ -13896,6 +13896,7 @@
             this.nearSegs[2].initialise(Ke.head),
               this.nearSegs[1].initialise(this.nearSegs[2].genNode),
               this.nearSegs[0].initialise(this.nearSegs[1].genNode),
+              (this.nearIndex = this.nearSegs[0].genNode.i),
               this.nearSegs[3].initGeneration(this.nearSegs[0].genNode);
           }
           update() {
