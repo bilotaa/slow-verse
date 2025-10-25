@@ -289,6 +289,31 @@
   }
 
   /**
+   * Ensure settings panel and menu bar remain visible when UI is hidden
+   * This function can be called periodically to enforce this rule
+   */
+  function ensureSettingsPanelVisible() {
+    const settingsPanel = document.getElementById('settings-panel');
+    const menuBar = document.getElementById('menu-bar');
+
+    if (settingsPanel) {
+      // Always make sure settings panel is not hidden by UI toggle
+      const computedStyle = window.getComputedStyle(settingsPanel);
+      if (settingsPanel.style.display === 'none' && settingsPanelOpen) {
+        settingsPanel.style.display = 'block';
+      }
+    }
+
+    if (menuBar) {
+      // Always make sure menu bar is not hidden by UI toggle
+      const computedStyle = window.getComputedStyle(menuBar);
+      if (menuBar.style.display === 'none') {
+        menuBar.style.display = 'flex';
+      }
+    }
+  }
+
+  /**
    * Simulate a keyboard press to trigger game shortcuts
    */
   function simulateKeyPress(key) {
