@@ -808,7 +808,6 @@
             let s = P.load(e);
             return (s.wrapS = i), (s.wrapT = i), (s.anisotropy = t), s;
           },
-          carSupraTexture = P.load(i.p + "static/media/car-supra.png"),
           B = (e, t = {}) => {
             for (let i in t) e.userData[i] = { value: t[i] };
             return (
@@ -16806,13 +16805,6 @@
               side: r.k,
             }),
             null: new r.D({ color: 16711935 }),
-            imagePlane: new r.D({
-              map: carSupraTexture,
-              transparent: !0,
-              side: r.k,
-              depthWrite: !0,
-              alphaTest: 0.1,
-            }),
           },
           zl = { turnSpeed: 0, turnAccel: 0, pTurnSpeed: 0 };
         var kl = class {
@@ -17074,17 +17066,21 @@
               let t = Object.keys(e.skins)[0];
               for (let i in e.skins[t]) n[i].color.setHex(e.skins[t][i]);
             }
-            const planeGeo = new r.I(3.0, 1.5);
-            const carPlaneMesh = new r.B(planeGeo, Cl.imagePlane);
-            carPlaneMesh.rotation.y = -Math.PI / 2;
-            carPlaneMesh.name = "carBodyPlane";
-            carPlaneMesh.renderOrder = 1;
-            carPlaneMesh.castShadow = !1;
-            carPlaneMesh.receiveShadow = !0;
-            z.carBodyPlane = carPlaneMesh;
-            this.positionHeadlights();
-            this.updateHeadlights();
-            z.geo.add(carPlaneMesh);
+            a.load(i.default, (e) => {
+              e.traverse((e) => {
+                if (e.isMesh) {
+                  let t = Cl.default,
+                    i = e.name.split("_")[1];
+                  i in Cl && (t = Cl[i]),
+                    (e.material = t),
+                    "shadow" == i && (e.castShadow = !0);
+                }
+              }),
+                this.positionHeadlights(),
+                this.updateHeadlights(),
+                (e.rotation.y = -Math.PI / 2),
+                z.geo.add(e);
+            }),
               a.load(s.default, (t) => {
                 t.traverse((e) => {
                   if (e.isMesh) {
@@ -17283,16 +17279,6 @@
               (this.pdT = e),
               (Ke.vehicleIndexDidChange = !1),
               this.updateVehicleNode();
-            if (z.carBodyPlane) {
-              const steerNorm = this.inputs.steer / (z.metrics.maxSteer || 1);
-              const accelInput = this.inputs.accel || 0;
-              const brakeInput = this.inputs.brake || 0;
-              const targetRoll = steerNorm * 0.15;
-              const targetPitch = (brakeInput - accelInput) * 0.1;
-              const lerpFactor = Math.min(1, 15 * e);
-              z.carBodyPlane.rotation.z = z.carBodyPlane.rotation.z * (1 - lerpFactor) + targetRoll * lerpFactor;
-              z.carBodyPlane.rotation.x = z.carBodyPlane.rotation.x * (1 - lerpFactor) + targetPitch * lerpFactor;
-            }
             try {
               this.audio.update(e);
             } catch (Tc) {
