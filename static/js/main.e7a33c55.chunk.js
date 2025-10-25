@@ -3252,7 +3252,7 @@
                   treesb: [Dt, Mt],
                   grass: bt,
                   bush: ft,
-                  grassColouration: [52 / 255, 20 / 255, 36 / 255, 0],
+                  grassColouration: [70 / 255, 95 / 255, 50 / 255, 0],
                   treeColouration: [-0.05, 0.1, 0.1, 0],
                 },
               },
