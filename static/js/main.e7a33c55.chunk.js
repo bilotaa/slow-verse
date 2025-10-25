@@ -18012,6 +18012,27 @@
                   Jr.sendUpdate("vehicleController", this.nextAnalyticsUpdate),
                   (this.nextAnalyticsUpdate = {}));
             }
+            if (Ke.vehicleNode.prev) {
+              if (Ke.vehicleNode.i > this.targetVehicleNodeIndex)
+                return (
+                  (z.wrongWay = !1),
+                  Ko.value == Uo.UTurn && Ko.set(Uo.None),
+                  (Ke.vehicleNode = Ke.vehicleNode.prev),
+                  (Ke.vehicleIndex = Ke.vehicleNode.i),
+                  (Ke.vehicleIndexDidChange = !0),
+                  void Yo.nodeDidChange()
+                );
+              Ke.vehicleNode.prev.prev &&
+                ((zl.d1 = z.position.distanceToSquared(Ke.vehicleNode.p)),
+                (zl.d2 = z.position.distanceToSquared(Ke.vehicleNode.prev.prev.p)),
+                zl.d2 < zl.d1 &&
+                  ((z.wrongWay = !1),
+                  Ko.value == Uo.UTurn && Ko.set(Uo.None),
+                  (Ke.vehicleNode = Ke.vehicleNode.prev),
+                  (Ke.vehicleIndex = Ke.vehicleNode.i),
+                  (Ke.vehicleIndexDidChange = !0),
+                  Yo.nodeDidChange()));
+            }
           }
           handleInput(e) {
             (this.inputs.accel = 0),
