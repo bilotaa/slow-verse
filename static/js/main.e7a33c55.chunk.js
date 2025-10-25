@@ -3225,7 +3225,7 @@
                   treesb: [Pt, Gt],
                   grass: Zt,
                   bush: Wt,
-                  grassColouration: [20 / 255, 10 / 255, 20 / 255, 0],
+                  grassColouration: [35 / 255, 70 / 255, 35 / 255, 0],
                   treeColouration: [-0.07, 0.1, 0.05, 0],
                 },
               },
