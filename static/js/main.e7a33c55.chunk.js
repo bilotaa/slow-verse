@@ -10835,7 +10835,7 @@
           },
           Dh = i.p + "static/media/marsmarker.6a313c62.obj";
         const Mh = {
-          black: new r.D({ color: 5588019 }),
+          black: new r.D({ color: 8943462 }),
           reflect: new r.D({
             color: 2293725,
             emissive: 2293725,
@@ -10852,7 +10852,7 @@
           },
           jh = i.p + "static/media/marsbarrier.c460e93d.obj";
         const Ch = {
-          black: new r.D({ color: 5588019 }),
+          black: new r.D({ color: 8943462 }),
           reflect: new r.D({
             color: 2293725,
             emissive: 2293725,
