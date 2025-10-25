@@ -16806,6 +16806,13 @@
               side: r.k,
             }),
             null: new r.D({ color: 16711935 }),
+            imagePlane: new r.D({
+              map: carSupraTexture,
+              transparent: !0,
+              side: r.k,
+              depthWrite: !0,
+              alphaTest: 0.1,
+            }),
           },
           zl = { turnSpeed: 0, turnAccel: 0, pTurnSpeed: 0 };
         var kl = class {
