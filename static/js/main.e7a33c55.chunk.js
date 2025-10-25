@@ -18012,8 +18012,8 @@
                   Jr.sendUpdate("vehicleController", this.nextAnalyticsUpdate),
                   (this.nextAnalyticsUpdate = {}));
             }
-            if (Ke.vehicleNode.prev) {
-              if (Ke.vehicleNode.i > this.targetVehicleNodeIndex)
+            if (Ke.vehicleNode.prev && Ke.vehicleNode.prev.i >= Ke.head.i) {
+              if (Ke.vehicleNode.i > this.targetVehicleNodeIndex && Ke.vehicleNode.prev.i >= Ke.head.i)
                 return (
                   (z.wrongWay = !1),
                   Ko.value == Uo.UTurn && Ko.set(Uo.None),
@@ -18023,9 +18023,11 @@
                   void Yo.nodeDidChange()
                 );
               Ke.vehicleNode.prev.prev &&
+                Ke.vehicleNode.prev.i >= Ke.head.i &&
                 ((zl.d1 = z.position.distanceToSquared(Ke.vehicleNode.p)),
                 (zl.d2 = z.position.distanceToSquared(Ke.vehicleNode.prev.prev.p)),
                 zl.d2 < zl.d1 &&
+                  Ke.vehicleNode.prev.i >= Ke.head.i &&
                   ((z.wrongWay = !1),
                   Ko.value == Uo.UTurn && Ko.set(Uo.None),
                   (Ke.vehicleNode = Ke.vehicleNode.prev),
