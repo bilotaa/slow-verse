@@ -3725,7 +3725,7 @@
             emissive: 16777215,
             emissiveIntensity: 0.2,
           }),
-          black: new r.D({ color: 3355443, flatShading: !0 }),
+          black: new r.D({ color: 6710886, flatShading: !0 }),
           reflect: new r.D({
             color: 16720418,
             emissive: 16720418,
@@ -16779,7 +16779,7 @@
             grey: new r.D({ color: 5592405 }),
             wheel: new r.D({ color: 4473924 }),
             white: new r.D({ color: 15658734 }),
-            black: new r.D({ color: 3355443 }),
+            black: new r.D({ color: 6710886 }),
             tire: new r.D({ color: 2236962 }),
             body: new r.F({ color: 16316664, roughness: 0.5 }),
             map: new r.F({ color: 16777215, roughness: 0.5, map: F(null) }),
