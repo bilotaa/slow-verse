@@ -225,6 +225,9 @@
     // Setup periodic checkbox updates to keep in sync
     setInterval(updateCheckboxes, 500);
 
+    // Setup periodic visibility enforcement to ensure menu bar and settings panel stay visible
+    setInterval(ensureSettingsPanelVisible, 500);
+
     console.log('[Settings Panel] Event listeners setup');
   }
 
