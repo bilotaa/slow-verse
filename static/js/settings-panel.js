@@ -37,14 +37,57 @@
    * These are exposed on the window object by the game
    */
   function findStateObjects() {
-    // Find the autodrive state object (referenced as 'y' in minified code)
-    // We'll need to access it through the React component instance
-    // For now, we'll interact directly with the DOM elements
-
     // Store reference to existing autodrive button for synchronization
     stateObjects.autodriveButton = document.getElementById('autodrive');
 
-    console.log('[Settings Panel] State objects located');
+    // Store references to all menu items BEFORE we remove them
+    const allMenuItems = document.querySelectorAll('.menu-item');
+    stateObjects.scenes = [];
+    stateObjects.weathers = [];
+    stateObjects.vehicles = [];
+    stateObjects.inputs = [];
+
+    allMenuItems.forEach(item => {
+      const img = item.querySelector('img');
+      if (!img || !img.alt) return;
+
+      const alt = img.alt.toLowerCase();
+
+      // Identify scenes (exclude weather, settings, and vehicle icons)
+      if (!['sunrise', 'clear', 'rain', 'sunset', 'night', 'settings',
+            'car', 'bus', 'bike', 'motorcycle', 'keyboard', 'mouse'].includes(alt)) {
+        stateObjects.scenes.push({
+          name: img.alt,
+          element: item
+        });
+      }
+
+      // Identify weathers
+      if (['sunrise', 'clear', 'rain', 'sunset', 'night'].includes(alt)) {
+        stateObjects.weathers.push({
+          name: img.alt,
+          element: item
+        });
+      }
+
+      // Identify vehicles
+      if (['car', 'bus', 'bike', 'motorcycle'].includes(alt)) {
+        stateObjects.vehicles.push({
+          name: img.alt,
+          element: item
+        });
+      }
+
+      // Identify input methods
+      if (['keyboard', 'mouse'].includes(alt)) {
+        stateObjects.inputs.push({
+          name: img.alt,
+          element: item
+        });
+      }
+    });
+
+    console.log('[Settings Panel] State objects located:', stateObjects);
   }
 
   /**
