@@ -3220,6 +3220,7 @@
                 ],
                 grass: Bt,
                 heather: Et,
+                road: wt,
                 foliage: {
                   trees: [Tt, Rt],
                   treesb: [Pt, Gt],
