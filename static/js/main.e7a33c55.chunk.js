@@ -3273,6 +3273,7 @@
                 grass: kt,
                 forest: St,
                 gravel: gt,
+                road: wt,
                 foliage: {
                   trees: [jt, Nt],
                   treesb: [zt, Ct],
