@@ -159,20 +159,21 @@
   }
 
   /**
-   * Remove all menu bar buttons except the settings icon
+   * Hide all menu bar buttons except the settings icon
    * This creates a cleaner UI with all controls in the settings panel
+   * Elements are hidden instead of removed so their click handlers still work
    */
   function removeMenuBarButtons() {
     const menuBarLeft = document.getElementById('menu-bar-left');
     const menuBarRight = document.getElementById('menu-bar-right');
 
     if (menuBarLeft) {
-      // Remove all children except settings icon and its following divider
+      // Hide all children except settings icon and its following divider
       const settingsIcon = document.getElementById('settings-menu-item');
       const children = Array.from(menuBarLeft.children);
 
       children.forEach(child => {
-        // Keep settings icon and the divider immediately after it
+        // Keep settings icon and the divider immediately after it visible
         if (child.id === 'settings-menu-item') {
           return; // Keep settings icon
         }
@@ -180,19 +181,19 @@
             child.classList.contains('menu-bar-vertical-divider')) {
           return; // Keep divider after settings icon
         }
-        // Remove everything else
-        child.remove();
+        // Hide everything else
+        child.style.display = 'none';
       });
 
-      console.log('[Settings Panel] Removed left menu bar buttons');
+      console.log('[Settings Panel] Hidden left menu bar buttons');
     }
 
     if (menuBarRight) {
-      // Remove all children from right side
-      while (menuBarRight.firstChild) {
-        menuBarRight.removeChild(menuBarRight.firstChild);
-      }
-      console.log('[Settings Panel] Removed right menu bar buttons');
+      // Hide all children from right side
+      Array.from(menuBarRight.children).forEach(child => {
+        child.style.display = 'none';
+      });
+      console.log('[Settings Panel] Hidden right menu bar buttons');
     }
   }
 
@@ -368,6 +369,28 @@
       #settings-menu-item.settings-active {
         background: rgba(255, 255, 255, 0.2);
       }
+
+      /* Close button */
+      .settings-close-button {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 28px;
+        height: 28px;
+        background: #999;
+        border: 1px solid #666;
+        color: #fff;
+        font-size: 18px;
+        line-height: 24px;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 4px;
+        z-index: 10;
+      }
+
+      .settings-close-button:hover {
+        background: #666;
+      }
     `;
 
     document.head.appendChild(style);
@@ -384,6 +407,7 @@
     panel.style.display = 'none'; // Initially hidden
 
     panel.innerHTML = `
+      <button class="settings-close-button" id="settings-close-button" title="Close Settings (or click settings icon again)">×</button>
       <div class="menu-panel-content">
         <!-- Section 1: Driving Controls -->
         <div class="settings-section">
@@ -608,6 +632,28 @@
       muteButton.addEventListener('click', toggleMute);
     }
 
+    // Close button
+    const closeButton = document.getElementById('settings-close-button');
+    if (closeButton) {
+      closeButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleSettingsPanel();
+      });
+    }
+
+    // Click outside to close
+    document.addEventListener('click', (e) => {
+      const settingsPanel = document.getElementById('settings-panel');
+      const settingsIcon = document.getElementById('settings-menu-item');
+
+      if (settingsPanelOpen && settingsPanel && settingsIcon) {
+        // Check if click is outside both the panel and the settings icon
+        if (!settingsPanel.contains(e.target) && !settingsIcon.contains(e.target)) {
+          toggleSettingsPanel();
+        }
+      }
+    });
+
     // Only start intervals if required elements exist
     const settingsPanel = document.getElementById('settings-panel');
     const menuBarLeft = document.getElementById('menu-bar-left');
@@ -799,17 +845,14 @@
     const sceneNameElement = document.getElementById('scene-current-name');
     if (!sceneNameElement) return;
 
-    // Try to find the active scene from menu items
-    const sceneItems = document.querySelectorAll('.menu-item');
+    // Use stored scene menu items from findStateObjects()
+    const sceneItems = stateObjects.sceneMenuItems || [];
     let foundScene = false;
 
-    sceneItems.forEach(item => {
-      if (item.classList.contains('menu-item-active')) {
-        const img = item.querySelector('img');
-        if (img && img.alt) {
-          sceneNameElement.textContent = img.alt;
-          foundScene = true;
-        }
+    sceneItems.forEach(sceneItem => {
+      if (sceneItem.element.classList.contains('menu-item-active')) {
+        sceneNameElement.textContent = sceneItem.name;
+        foundScene = true;
       }
     });
 
@@ -825,20 +868,14 @@
     const weatherNameElement = document.getElementById('weather-current-name');
     if (!weatherNameElement) return;
 
-    // Try to find active weather indicator
-    const weatherItems = document.querySelectorAll('.menu-item');
+    // Use stored weather menu items from findStateObjects()
+    const weatherItems = stateObjects.weatherMenuItems || [];
     let foundWeather = false;
 
-    weatherItems.forEach(item => {
-      if (item.classList.contains('menu-item-active')) {
-        const img = item.querySelector('img');
-        if (img && img.alt && (
-          img.alt === 'Sunrise' || img.alt === 'Clear' ||
-          img.alt === 'Rain' || img.alt === 'Sunset' || img.alt === 'Night'
-        )) {
-          weatherNameElement.textContent = img.alt;
-          foundWeather = true;
-        }
+    weatherItems.forEach(weatherItem => {
+      if (weatherItem.element.classList.contains('menu-item-active')) {
+        weatherNameElement.textContent = weatherItem.name;
+        foundWeather = true;
       }
     });
 
