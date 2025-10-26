@@ -697,22 +697,10 @@
     const sceneOptionList = document.getElementById('scene-option-list');
     if (!sceneOptionList) return;
 
-    // Find all scene menu items in the original menu
-    const sceneMenuItems = document.querySelectorAll('.menu-item');
-    const scenes = [];
+    // Use stored scene references
+    const scenes = stateObjects.scenes || [];
 
-    sceneMenuItems.forEach(item => {
-      const img = item.querySelector('img');
-      if (img && img.alt && img.alt !== 'Settings' && img.alt !== 'Weather') {
-        // This is likely a scene item (Earth, Mars, Moon, etc.)
-        scenes.push({
-          name: img.alt,
-          element: item
-        });
-      }
-    });
-
-    // If we found scenes in the menu, populate the list
+    // Populate the list
     if (scenes.length > 0) {
       sceneOptionList.innerHTML = '';
       scenes.forEach(scene => {
@@ -739,24 +727,10 @@
     const weatherOptionList = document.getElementById('weather-option-list');
     if (!weatherOptionList) return;
 
-    // Find weather menu items
-    const weatherMenuItems = document.querySelectorAll('.menu-item');
-    const weathers = [];
+    // Use stored weather references
+    const weathers = stateObjects.weathers || [];
 
-    weatherMenuItems.forEach(item => {
-      const img = item.querySelector('img');
-      if (img && img.alt && (
-        img.alt === 'Sunrise' || img.alt === 'Clear' ||
-        img.alt === 'Rain' || img.alt === 'Sunset' || img.alt === 'Night'
-      )) {
-        weathers.push({
-          name: img.alt,
-          element: item
-        });
-      }
-    });
-
-    // If we found weathers, populate the list
+    // Populate the list
     if (weathers.length > 0) {
       weatherOptionList.innerHTML = '';
       weathers.forEach(weather => {
