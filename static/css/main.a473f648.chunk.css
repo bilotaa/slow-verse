@@ -894,9 +894,10 @@ body {
     color: #fff;
   }
   .ui-stat-unit {
-    border-top: 1px solid hsla(0, 0%, 100%, 0.2);
+    border-top: 1px solid rgba(255, 215, 0, 0.4);
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5333333333333333);
     padding: 4px;
+    color: #ffd700;
     font-size: 1.8vh;
   }
   .ui-stat-val {
