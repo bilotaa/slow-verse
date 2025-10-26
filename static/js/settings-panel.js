@@ -98,6 +98,44 @@
   }
 
   /**
+   * Remove all menu bar buttons except the settings icon
+   * This creates a cleaner UI with all controls in the settings panel
+   */
+  function removeMenuBarButtons() {
+    const menuBarLeft = document.getElementById('menu-bar-left');
+    const menuBarRight = document.getElementById('menu-bar-right');
+
+    if (menuBarLeft) {
+      // Remove all children except settings icon and its following divider
+      const settingsIcon = document.getElementById('settings-menu-item');
+      const children = Array.from(menuBarLeft.children);
+
+      children.forEach(child => {
+        // Keep settings icon and the divider immediately after it
+        if (child.id === 'settings-menu-item') {
+          return; // Keep settings icon
+        }
+        if (child === settingsIcon?.nextElementSibling &&
+            child.classList.contains('menu-bar-vertical-divider')) {
+          return; // Keep divider after settings icon
+        }
+        // Remove everything else
+        child.remove();
+      });
+
+      console.log('[Settings Panel] Removed left menu bar buttons');
+    }
+
+    if (menuBarRight) {
+      // Remove all children from right side
+      while (menuBarRight.firstChild) {
+        menuBarRight.removeChild(menuBarRight.firstChild);
+      }
+      console.log('[Settings Panel] Removed right menu bar buttons');
+    }
+  }
+
+  /**
    * Create the settings panel HTML structure
    */
   function createSettingsPanel() {
