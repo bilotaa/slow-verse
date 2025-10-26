@@ -868,23 +868,22 @@
    */
   function updateVehicleButtons() {
     const vehicleButtons = document.querySelectorAll('[data-vehicle]');
-    const vehicleMenuItems = document.querySelectorAll('.menu-item');
+    const vehicleMenuItems = stateObjects.vehicleMenuItems || [];
 
+    // Clear all active states
     vehicleButtons.forEach(button => {
       button.classList.remove('active');
     });
 
-    vehicleMenuItems.forEach(item => {
-      if (item.classList.contains('menu-item-active')) {
-        const img = item.querySelector('img');
-        if (img && img.alt) {
-          const alt = img.alt.toLowerCase();
-          vehicleButtons.forEach(button => {
-            if (alt.includes(button.dataset.vehicle)) {
-              button.classList.add('active');
-            }
-          });
-        }
+    // Find active vehicle
+    vehicleMenuItems.forEach(vehicleItem => {
+      if (vehicleItem.element.classList.contains('menu-item-active')) {
+        const vehicleName = vehicleItem.name.toLowerCase();
+        vehicleButtons.forEach(button => {
+          if (vehicleName.includes(button.dataset.vehicle)) {
+            button.classList.add('active');
+          }
+        });
       }
     });
   }
