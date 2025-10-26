@@ -901,7 +901,7 @@ body {
   }
   .ui-stat-val {
     font-size: 3vh;
-    color: #fff;
+    color: #ffd700;
     padding: 2px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5333333333333333);
     -webkit-text-stroke-width: 1px;
