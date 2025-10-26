@@ -570,11 +570,27 @@
       muteButton.addEventListener('click', toggleMute);
     }
 
-    // Setup periodic updates to keep UI in sync
-    setInterval(updateAllControls, 500);
+    // Only start intervals if required elements exist
+    const settingsPanel = document.getElementById('settings-panel');
+    const menuBarLeft = document.getElementById('menu-bar-left');
 
-    // Setup periodic visibility enforcement to ensure menu bar and settings panel stay visible
-    setInterval(ensureSettingsPanelVisible, 500);
+    if (settingsPanel && menuBarLeft) {
+      // Setup periodic updates to keep UI in sync
+      setInterval(() => {
+        // Safety check before each update
+        if (document.getElementById('settings-panel')) {
+          updateAllControls();
+        }
+      }, 500);
+
+      // Setup periodic visibility enforcement
+      setInterval(() => {
+        // Safety check before each update
+        if (document.getElementById('settings-panel')) {
+          ensureSettingsPanelVisible();
+        }
+      }, 500);
+    }
 
     // Initialize scene and weather lists
     setTimeout(initializeSceneList, 500);
