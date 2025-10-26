@@ -11,25 +11,46 @@
 
   // Wait for the page to be fully loaded and React to render
   function init() {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
-      return;
+    let initAttempts = 0;
+    const maxAttempts = 60; // 30 seconds with 500ms checks
+    let checkInterval = null;
+
+    function tryInitialize() {
+      initAttempts++;
+
+      // Check if required elements exist
+      const menuBarLeft = document.getElementById('menu-bar-left');
+
+      if (menuBarLeft) {
+        // Elements exist - initialize!
+        clearInterval(checkInterval);
+        try {
+          findStateObjects();
+          injectStyles();
+          injectSettingsIcon();
+          removeMenuBarButtons();
+          createSettingsPanel();
+          setupEventListeners();
+          console.log('[Settings Panel] Initialized successfully');
+        } catch (error) {
+          console.error('[Settings Panel] Initialization error:', error);
+        }
+      } else if (initAttempts >= maxAttempts) {
+        // Timeout - give up silently
+        clearInterval(checkInterval);
+        console.log('[Settings Panel] Menu bar not found after 30s, giving up');
+      }
+      // Otherwise keep checking
     }
 
-    // Wait a bit more for React to render
-    setTimeout(() => {
-      try {
-        findStateObjects();
-        injectStyles();
-        injectSettingsIcon();
-        removeMenuBarButtons();
-        createSettingsPanel();
-        setupEventListeners();
-        console.log('[Settings Panel] Initialized successfully');
-      } catch (error) {
-        console.error('[Settings Panel] Initialization error:', error);
-      }
-    }, 1000);
+    // Start checking every 500ms
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        checkInterval = setInterval(tryInitialize, 500);
+      });
+    } else {
+      checkInterval = setInterval(tryInitialize, 500);
+    }
   }
 
   /**
