@@ -851,17 +851,14 @@
    * Change vehicle type
    */
   function changeVehicle(vehicleType) {
-    // Find the vehicle selector in the menu
-    const vehicleMenuItems = document.querySelectorAll('.menu-item');
+    // Use stored vehicle menu items from findStateObjects()
+    const vehicleMenuItems = stateObjects.vehicleMenuItems || [];
 
-    vehicleMenuItems.forEach(item => {
-      const img = item.querySelector('img');
-      if (img && img.alt) {
-        const alt = img.alt.toLowerCase();
-        if (alt === vehicleType || alt.includes(vehicleType)) {
-          item.click();
-          setTimeout(updateVehicleButtons, 100);
-        }
+    vehicleMenuItems.forEach(vehicleItem => {
+      const vehicleName = vehicleItem.name.toLowerCase();
+      if (vehicleName === vehicleType || vehicleName.includes(vehicleType)) {
+        vehicleItem.element.click();
+        setTimeout(updateVehicleButtons, 100);
       }
     });
   }
