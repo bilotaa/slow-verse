@@ -911,25 +911,24 @@
    */
   function updateInputButtons() {
     const inputButtons = document.querySelectorAll('[data-input]');
-    const inputMenuItems = document.querySelectorAll('.menu-item');
+    const inputMenuItems = stateObjects.inputMenuItems || [];
 
+    // Clear all active states
     inputButtons.forEach(button => {
       button.classList.remove('active');
     });
 
-    inputMenuItems.forEach(item => {
-      if (item.classList.contains('menu-item-active')) {
-        const img = item.querySelector('img');
-        if (img && img.alt) {
-          const alt = img.alt.toLowerCase();
-          inputButtons.forEach(button => {
-            const method = parseInt(button.dataset.input);
-            if ((method === 1 && alt.includes('mouse')) ||
-                (method === 2 && alt.includes('keyboard'))) {
-              button.classList.add('active');
-            }
-          });
-        }
+    // Find active input method
+    inputMenuItems.forEach(inputItem => {
+      if (inputItem.element.classList.contains('menu-item-active')) {
+        const inputName = inputItem.name.toLowerCase();
+        inputButtons.forEach(button => {
+          const method = parseInt(button.dataset.input);
+          if ((method === 1 && inputName.includes('mouse')) ||
+              (method === 2 && inputName.includes('keyboard'))) {
+            button.classList.add('active');
+          }
+        });
       }
     });
   }
