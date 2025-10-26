@@ -2776,7 +2776,7 @@
           mt = i.p + "static/media/forest_summer_01.36a05d7c.jpg",
           xt = i.p + "static/media/heather_01.da98042f.jpg",
           vt = i.p + "static/media/sand_01.b8a432e9.jpg",
-          wt = i.p + "static/media/road_03.610f8581.jpg",
+          wt = i.p + "static/media/road-texture-main.jpg",
           bt = i.p + "static/media/foliage_grass_summer.1eae2f9a.png",
           ft = i.p + "static/media/foliage_bush_summer.e9e13de8.png",
           yt = i.p + "static/media/trees_summer_far_04.df59f729.png",
