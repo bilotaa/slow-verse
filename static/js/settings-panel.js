@@ -314,11 +314,71 @@
       });
     }
 
-    // Setup periodic checkbox updates to keep in sync
-    setInterval(updateCheckboxes, 500);
+    // Scene expand/collapse
+    const sceneExpandButton = document.getElementById('scene-expand-button');
+    const sceneOptionList = document.getElementById('scene-option-list');
+    if (sceneExpandButton && sceneOptionList) {
+      sceneExpandButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isExpanded = sceneOptionList.style.display === 'block';
+        sceneOptionList.style.display = isExpanded ? 'none' : 'block';
+        sceneExpandButton.querySelector('.expand-arrow').textContent = isExpanded ? '▼' : '▲';
+      });
+    }
+
+    // Weather expand/collapse
+    const weatherExpandButton = document.getElementById('weather-expand-button');
+    const weatherOptionList = document.getElementById('weather-option-list');
+    if (weatherExpandButton && weatherOptionList) {
+      weatherExpandButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isExpanded = weatherOptionList.style.display === 'block';
+        weatherOptionList.style.display = isExpanded ? 'none' : 'block';
+        weatherExpandButton.querySelector('.expand-arrow').textContent = isExpanded ? '▼' : '▲';
+      });
+    }
+
+    // Vehicle buttons
+    const vehicleButtons = document.querySelectorAll('[data-vehicle]');
+    vehicleButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const vehicleType = button.dataset.vehicle;
+        changeVehicle(vehicleType);
+      });
+    });
+
+    // Input method buttons
+    const inputButtons = document.querySelectorAll('[data-input]');
+    inputButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const inputMethod = parseInt(button.dataset.input);
+        changeInputMethod(inputMethod);
+      });
+    });
+
+    // Volume slider
+    const volumeSlider = document.getElementById('volume-slider');
+    if (volumeSlider) {
+      volumeSlider.addEventListener('input', (e) => {
+        setVolume(parseFloat(e.target.value));
+      });
+    }
+
+    // Mute button
+    const muteButton = document.getElementById('mute-button');
+    if (muteButton) {
+      muteButton.addEventListener('click', toggleMute);
+    }
+
+    // Setup periodic updates to keep UI in sync
+    setInterval(updateAllControls, 500);
 
     // Setup periodic visibility enforcement to ensure menu bar and settings panel stay visible
     setInterval(ensureSettingsPanelVisible, 500);
+
+    // Initialize scene and weather lists
+    setTimeout(initializeSceneList, 500);
+    setTimeout(initializeWeatherList, 500);
 
     console.log('[Settings Panel] Event listeners setup');
   }
