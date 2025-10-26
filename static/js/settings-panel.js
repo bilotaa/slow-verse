@@ -162,7 +162,60 @@
           </div>
         </div>
 
-        <!-- Section 2: Display -->
+        <!-- Section 2: Environment (Scene & Weather) -->
+        <div class="settings-section">
+          <div class="settings-section-title">ENVIRONMENT</div>
+
+          <!-- Scene Selector -->
+          <div class="settings-expand-container">
+            <button class="settings-expand-button" id="scene-expand-button">
+              <span><strong>Scene:</strong> <span id="scene-current-name">Loading...</span></span>
+              <span class="expand-arrow">▼</span>
+            </button>
+            <div class="settings-option-list" id="scene-option-list" style="display: none;"></div>
+          </div>
+
+          <!-- Weather Selector -->
+          <div class="settings-expand-container">
+            <button class="settings-expand-button" id="weather-expand-button">
+              <span><strong>Weather:</strong> <span id="weather-current-name">Loading...</span></span>
+              <span class="expand-arrow">▼</span>
+            </button>
+            <div class="settings-option-list" id="weather-option-list" style="display: none;"></div>
+          </div>
+        </div>
+
+        <!-- Section 3: Vehicle -->
+        <div class="settings-section">
+          <div class="settings-section-title">VEHICLE</div>
+          <div class="settings-button-group">
+            <button class="settings-button" data-vehicle="car">Car</button>
+            <button class="settings-button" data-vehicle="bus">Bus</button>
+            <button class="settings-button" data-vehicle="bike">Bike</button>
+          </div>
+        </div>
+
+        <!-- Section 4: Controls -->
+        <div class="settings-section">
+          <div class="settings-section-title">CONTROLS</div>
+          <div class="settings-button-group">
+            <button class="settings-button" data-input="2">Keyboard</button>
+            <button class="settings-button" data-input="1">Mouse</button>
+          </div>
+        </div>
+
+        <!-- Section 5: Audio -->
+        <div class="settings-section">
+          <div class="settings-section-title">AUDIO</div>
+          <div class="settings-slider-container">
+            <input type="range" class="settings-slider" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
+            <button class="settings-mute-button" id="mute-button">
+              <img src="./static/media/vol_high.02e36d0e.svg" alt="Volume" id="volume-icon">
+            </button>
+          </div>
+        </div>
+
+        <!-- Section 6: Display -->
         <div class="settings-section">
           <div class="settings-section-title">DISPLAY</div>
 
@@ -172,7 +225,7 @@
           </div>
         </div>
 
-        <!-- Section 3: Quick Actions -->
+        <!-- Section 7: Quick Actions -->
         <div class="settings-section">
           <div class="settings-section-title">QUICK ACTIONS</div>
 
