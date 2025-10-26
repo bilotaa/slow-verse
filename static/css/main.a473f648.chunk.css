@@ -1685,6 +1685,9 @@ body {
 .menu-panel-content {
   max-width: 400px;
   margin: 0 auto;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Section Styling */

@@ -28,9 +28,9 @@
           findStateObjects();
           injectStyles();
           injectSettingsIcon();
-          removeMenuBarButtons();
           createSettingsPanel();
           setupEventListeners();
+          removeMenuBarButtons();
           console.log('[Settings Panel] Initialized successfully');
         } catch (error) {
           console.error('[Settings Panel] Initialization error:', error);
@@ -65,7 +65,45 @@
     // Store reference to existing autodrive button for synchronization
     stateObjects.autodriveButton = document.getElementById('autodrive');
 
+    // Store references to menu items BEFORE they are removed
+    stateObjects.sceneMenuItems = [];
+    stateObjects.weatherMenuItems = [];
+    stateObjects.vehicleMenuItems = [];
+    stateObjects.inputMenuItems = [];
+
+    const menuItems = document.querySelectorAll('.menu-item');
+    menuItems.forEach(item => {
+      const img = item.querySelector('img');
+      if (img && img.alt) {
+        const alt = img.alt;
+
+        // Categorize menu items by type
+        // Scenes: Earth, Mars, Moon, Venus
+        if (alt === 'Earth' || alt === 'Mars' || alt === 'Moon' || alt === 'Venus') {
+          stateObjects.sceneMenuItems.push({ name: alt, element: item });
+        }
+        // Weather: Sunrise, Clear, Rain, Sunset, Night
+        else if (alt === 'Sunrise' || alt === 'Clear' || alt === 'Rain' || alt === 'Sunset' || alt === 'Night') {
+          stateObjects.weatherMenuItems.push({ name: alt, element: item });
+        }
+        // Vehicles: Car, Bus, Bike
+        else if (alt === 'Car' || alt === 'Bus' || alt === 'Bike') {
+          stateObjects.vehicleMenuItems.push({ name: alt, element: item });
+        }
+        // Input methods: Mouse, Keyboard
+        else if (alt === 'Mouse' || alt === 'Keyboard') {
+          stateObjects.inputMenuItems.push({ name: alt, element: item });
+        }
+      }
+    });
+
     console.log('[Settings Panel] State objects located');
+    console.log('[Settings Panel] Stored menu items:', {
+      scenes: stateObjects.sceneMenuItems.length,
+      weather: stateObjects.weatherMenuItems.length,
+      vehicles: stateObjects.vehicleMenuItems.length,
+      inputs: stateObjects.inputMenuItems.length
+    });
   }
 
   /**
@@ -410,7 +448,7 @@
           <div class="settings-slider-container">
             <input type="range" class="settings-slider" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
             <button class="settings-mute-button" id="mute-button">
-              <img src="./static/media/vol_high.02e36d0e.svg" alt="Volume" id="volume-icon">
+              <img src="./static/media/vol_high.30de055e.svg" alt="Volume" id="volume-icon">
             </button>
           </div>
         </div>
@@ -607,6 +645,7 @@
 
     const panel = document.getElementById('settings-panel');
     const menuItem = document.getElementById('settings-menu-item');
+    const pauseDom = document.getElementById('game-paused');
 
     if (panel) {
       panel.style.display = settingsPanelOpen ? 'block' : 'none';
@@ -618,6 +657,11 @@
       } else {
         menuItem.classList.remove('settings-active');
       }
+    }
+
+    // Pause/unpause game based on settings panel state
+    if (pauseDom) {
+      pauseDom.style.display = settingsPanelOpen ? 'block' : 'none';
     }
 
     // Update checkboxes when opening
@@ -691,22 +735,10 @@
     const sceneOptionList = document.getElementById('scene-option-list');
     if (!sceneOptionList) return;
 
-    // Find all scene menu items in the original menu
-    const sceneMenuItems = document.querySelectorAll('.menu-item');
-    const scenes = [];
+    // Use stored scene menu items from findStateObjects()
+    const scenes = stateObjects.sceneMenuItems || [];
 
-    sceneMenuItems.forEach(item => {
-      const img = item.querySelector('img');
-      if (img && img.alt && img.alt !== 'Settings' && img.alt !== 'Weather') {
-        // This is likely a scene item (Earth, Mars, Moon, etc.)
-        scenes.push({
-          name: img.alt,
-          element: item
-        });
-      }
-    });
-
-    // If we found scenes in the menu, populate the list
+    // If we have stored scenes, populate the list
     if (scenes.length > 0) {
       sceneOptionList.innerHTML = '';
       scenes.forEach(scene => {
@@ -721,6 +753,8 @@
         });
         sceneOptionList.appendChild(option);
       });
+    } else {
+      console.warn('[Settings Panel] No scene items found');
     }
 
     updateSceneDisplay();
@@ -733,24 +767,10 @@
     const weatherOptionList = document.getElementById('weather-option-list');
     if (!weatherOptionList) return;
 
-    // Find weather menu items
-    const weatherMenuItems = document.querySelectorAll('.menu-item');
-    const weathers = [];
+    // Use stored weather menu items from findStateObjects()
+    const weathers = stateObjects.weatherMenuItems || [];
 
-    weatherMenuItems.forEach(item => {
-      const img = item.querySelector('img');
-      if (img && img.alt && (
-        img.alt === 'Sunrise' || img.alt === 'Clear' ||
-        img.alt === 'Rain' || img.alt === 'Sunset' || img.alt === 'Night'
-      )) {
-        weathers.push({
-          name: img.alt,
-          element: item
-        });
-      }
-    });
-
-    // If we found weathers, populate the list
+    // If we have stored weathers, populate the list
     if (weathers.length > 0) {
       weatherOptionList.innerHTML = '';
       weathers.forEach(weather => {
@@ -765,6 +785,8 @@
         });
         weatherOptionList.appendChild(option);
       });
+    } else {
+      console.warn('[Settings Panel] No weather items found');
     }
 
     updateWeatherDisplay();
@@ -829,17 +851,14 @@
    * Change vehicle type
    */
   function changeVehicle(vehicleType) {
-    // Find the vehicle selector in the menu
-    const vehicleMenuItems = document.querySelectorAll('.menu-item');
+    // Use stored vehicle menu items from findStateObjects()
+    const vehicleMenuItems = stateObjects.vehicleMenuItems || [];
 
-    vehicleMenuItems.forEach(item => {
-      const img = item.querySelector('img');
-      if (img && img.alt) {
-        const alt = img.alt.toLowerCase();
-        if (alt === vehicleType || alt.includes(vehicleType)) {
-          item.click();
-          setTimeout(updateVehicleButtons, 100);
-        }
+    vehicleMenuItems.forEach(vehicleItem => {
+      const vehicleName = vehicleItem.name.toLowerCase();
+      if (vehicleName === vehicleType || vehicleName.includes(vehicleType)) {
+        vehicleItem.element.click();
+        setTimeout(updateVehicleButtons, 100);
       }
     });
   }
@@ -849,23 +868,22 @@
    */
   function updateVehicleButtons() {
     const vehicleButtons = document.querySelectorAll('[data-vehicle]');
-    const vehicleMenuItems = document.querySelectorAll('.menu-item');
+    const vehicleMenuItems = stateObjects.vehicleMenuItems || [];
 
+    // Clear all active states
     vehicleButtons.forEach(button => {
       button.classList.remove('active');
     });
 
-    vehicleMenuItems.forEach(item => {
-      if (item.classList.contains('menu-item-active')) {
-        const img = item.querySelector('img');
-        if (img && img.alt) {
-          const alt = img.alt.toLowerCase();
-          vehicleButtons.forEach(button => {
-            if (alt.includes(button.dataset.vehicle)) {
-              button.classList.add('active');
-            }
-          });
-        }
+    // Find active vehicle
+    vehicleMenuItems.forEach(vehicleItem => {
+      if (vehicleItem.element.classList.contains('menu-item-active')) {
+        const vehicleName = vehicleItem.name.toLowerCase();
+        vehicleButtons.forEach(button => {
+          if (vehicleName.includes(button.dataset.vehicle)) {
+            button.classList.add('active');
+          }
+        });
       }
     });
   }
@@ -874,19 +892,16 @@
    * Change input method
    */
   function changeInputMethod(inputMethod) {
-    // Find the input selector in the menu
-    const inputMenuItems = document.querySelectorAll('.menu-item');
+    // Use stored input menu items from findStateObjects()
+    const inputMenuItems = stateObjects.inputMenuItems || [];
 
-    inputMenuItems.forEach(item => {
-      const img = item.querySelector('img');
-      if (img && img.alt) {
-        const alt = img.alt.toLowerCase();
-        // Input method: 1 = mouse, 2 = keyboard
-        if ((inputMethod === 1 && alt.includes('mouse')) ||
-            (inputMethod === 2 && alt.includes('keyboard'))) {
-          item.click();
-          setTimeout(updateInputButtons, 100);
-        }
+    inputMenuItems.forEach(inputItem => {
+      const inputName = inputItem.name.toLowerCase();
+      // Input method: 1 = mouse, 2 = keyboard
+      if ((inputMethod === 1 && inputName.includes('mouse')) ||
+          (inputMethod === 2 && inputName.includes('keyboard'))) {
+        inputItem.element.click();
+        setTimeout(updateInputButtons, 100);
       }
     });
   }
@@ -896,25 +911,24 @@
    */
   function updateInputButtons() {
     const inputButtons = document.querySelectorAll('[data-input]');
-    const inputMenuItems = document.querySelectorAll('.menu-item');
+    const inputMenuItems = stateObjects.inputMenuItems || [];
 
+    // Clear all active states
     inputButtons.forEach(button => {
       button.classList.remove('active');
     });
 
-    inputMenuItems.forEach(item => {
-      if (item.classList.contains('menu-item-active')) {
-        const img = item.querySelector('img');
-        if (img && img.alt) {
-          const alt = img.alt.toLowerCase();
-          inputButtons.forEach(button => {
-            const method = parseInt(button.dataset.input);
-            if ((method === 1 && alt.includes('mouse')) ||
-                (method === 2 && alt.includes('keyboard'))) {
-              button.classList.add('active');
-            }
-          });
-        }
+    // Find active input method
+    inputMenuItems.forEach(inputItem => {
+      if (inputItem.element.classList.contains('menu-item-active')) {
+        const inputName = inputItem.name.toLowerCase();
+        inputButtons.forEach(button => {
+          const method = parseInt(button.dataset.input);
+          if ((method === 1 && inputName.includes('mouse')) ||
+              (method === 2 && inputName.includes('keyboard'))) {
+            button.classList.add('active');
+          }
+        });
       }
     });
   }
@@ -972,9 +986,9 @@
     if (!volumeIcon) return;
 
     if (volume === 0) {
-      volumeIcon.src = './static/media/vol_off.03e33bbd.svg';
+      volumeIcon.src = './static/media/vol_off.11497865.svg';
     } else {
-      volumeIcon.src = './static/media/vol_high.02e36d0e.svg';
+      volumeIcon.src = './static/media/vol_high.30de055e.svg';
     }
   }
 
