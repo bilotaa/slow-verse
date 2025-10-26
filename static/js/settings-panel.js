@@ -667,8 +667,8 @@
     const settingsPanel = document.getElementById('settings-panel');
     const menuBar = document.getElementById('menu-bar');
 
-    if (settingsPanel) {
-      // Always make sure settings panel is not hidden by UI toggle
+    if (settingsPanel && typeof settingsPanelOpen !== 'undefined') {
+      // Only manipulate if panel exists
       const computedStyle = window.getComputedStyle(settingsPanel);
       if (settingsPanel.style.display === 'none' && settingsPanelOpen) {
         settingsPanel.style.display = 'block';
