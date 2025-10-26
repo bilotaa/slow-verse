@@ -892,19 +892,16 @@
    * Change input method
    */
   function changeInputMethod(inputMethod) {
-    // Find the input selector in the menu
-    const inputMenuItems = document.querySelectorAll('.menu-item');
+    // Use stored input menu items from findStateObjects()
+    const inputMenuItems = stateObjects.inputMenuItems || [];
 
-    inputMenuItems.forEach(item => {
-      const img = item.querySelector('img');
-      if (img && img.alt) {
-        const alt = img.alt.toLowerCase();
-        // Input method: 1 = mouse, 2 = keyboard
-        if ((inputMethod === 1 && alt.includes('mouse')) ||
-            (inputMethod === 2 && alt.includes('keyboard'))) {
-          item.click();
-          setTimeout(updateInputButtons, 100);
-        }
+    inputMenuItems.forEach(inputItem => {
+      const inputName = inputItem.name.toLowerCase();
+      // Input method: 1 = mouse, 2 = keyboard
+      if ((inputMethod === 1 && inputName.includes('mouse')) ||
+          (inputMethod === 2 && inputName.includes('keyboard'))) {
+        inputItem.element.click();
+        setTimeout(updateInputButtons, 100);
       }
     });
   }
