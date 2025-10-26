@@ -20,6 +20,7 @@
     setTimeout(() => {
       try {
         findStateObjects();
+        injectStyles();
         injectSettingsIcon();
         removeMenuBarButtons();
         createSettingsPanel();
