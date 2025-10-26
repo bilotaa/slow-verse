@@ -982,6 +982,11 @@
    * Update all controls to match current game state
    */
   function updateAllControls() {
+    // Early exit if settings panel doesn't exist
+    if (!document.getElementById('settings-panel')) {
+      return;
+    }
+
     updateCheckboxes();
     updateSceneDisplay();
     updateWeatherDisplay();
