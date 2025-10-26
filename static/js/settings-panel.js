@@ -65,7 +65,45 @@
     // Store reference to existing autodrive button for synchronization
     stateObjects.autodriveButton = document.getElementById('autodrive');
 
+    // Store references to menu items BEFORE they are removed
+    stateObjects.sceneMenuItems = [];
+    stateObjects.weatherMenuItems = [];
+    stateObjects.vehicleMenuItems = [];
+    stateObjects.inputMenuItems = [];
+
+    const menuItems = document.querySelectorAll('.menu-item');
+    menuItems.forEach(item => {
+      const img = item.querySelector('img');
+      if (img && img.alt) {
+        const alt = img.alt;
+
+        // Categorize menu items by type
+        // Scenes: Earth, Mars, Moon, Venus
+        if (alt === 'Earth' || alt === 'Mars' || alt === 'Moon' || alt === 'Venus') {
+          stateObjects.sceneMenuItems.push({ name: alt, element: item });
+        }
+        // Weather: Sunrise, Clear, Rain, Sunset, Night
+        else if (alt === 'Sunrise' || alt === 'Clear' || alt === 'Rain' || alt === 'Sunset' || alt === 'Night') {
+          stateObjects.weatherMenuItems.push({ name: alt, element: item });
+        }
+        // Vehicles: Car, Bus, Bike
+        else if (alt === 'Car' || alt === 'Bus' || alt === 'Bike') {
+          stateObjects.vehicleMenuItems.push({ name: alt, element: item });
+        }
+        // Input methods: Mouse, Keyboard
+        else if (alt === 'Mouse' || alt === 'Keyboard') {
+          stateObjects.inputMenuItems.push({ name: alt, element: item });
+        }
+      }
+    });
+
     console.log('[Settings Panel] State objects located');
+    console.log('[Settings Panel] Stored menu items:', {
+      scenes: stateObjects.sceneMenuItems.length,
+      weather: stateObjects.weatherMenuItems.length,
+      vehicles: stateObjects.vehicleMenuItems.length,
+      inputs: stateObjects.inputMenuItems.length
+    });
   }
 
   /**
