@@ -845,17 +845,14 @@
     const sceneNameElement = document.getElementById('scene-current-name');
     if (!sceneNameElement) return;
 
-    // Try to find the active scene from menu items
-    const sceneItems = document.querySelectorAll('.menu-item');
+    // Use stored scene menu items from findStateObjects()
+    const sceneItems = stateObjects.sceneMenuItems || [];
     let foundScene = false;
 
-    sceneItems.forEach(item => {
-      if (item.classList.contains('menu-item-active')) {
-        const img = item.querySelector('img');
-        if (img && img.alt) {
-          sceneNameElement.textContent = img.alt;
-          foundScene = true;
-        }
+    sceneItems.forEach(sceneItem => {
+      if (sceneItem.element.classList.contains('menu-item-active')) {
+        sceneNameElement.textContent = sceneItem.name;
+        foundScene = true;
       }
     });
 
@@ -871,20 +868,14 @@
     const weatherNameElement = document.getElementById('weather-current-name');
     if (!weatherNameElement) return;
 
-    // Try to find active weather indicator
-    const weatherItems = document.querySelectorAll('.menu-item');
+    // Use stored weather menu items from findStateObjects()
+    const weatherItems = stateObjects.weatherMenuItems || [];
     let foundWeather = false;
 
-    weatherItems.forEach(item => {
-      if (item.classList.contains('menu-item-active')) {
-        const img = item.querySelector('img');
-        if (img && img.alt && (
-          img.alt === 'Sunrise' || img.alt === 'Clear' ||
-          img.alt === 'Rain' || img.alt === 'Sunset' || img.alt === 'Night'
-        )) {
-          weatherNameElement.textContent = img.alt;
-          foundWeather = true;
-        }
+    weatherItems.forEach(weatherItem => {
+      if (weatherItem.element.classList.contains('menu-item-active')) {
+        weatherNameElement.textContent = weatherItem.name;
+        foundWeather = true;
       }
     });
 
