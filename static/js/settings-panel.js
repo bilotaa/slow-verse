@@ -607,6 +607,7 @@
 
     const panel = document.getElementById('settings-panel');
     const menuItem = document.getElementById('settings-menu-item');
+    const pauseDom = document.getElementById('game-paused');
 
     if (panel) {
       panel.style.display = settingsPanelOpen ? 'block' : 'none';
@@ -618,6 +619,11 @@
       } else {
         menuItem.classList.remove('settings-active');
       }
+    }
+
+    // Pause/unpause game based on settings panel state
+    if (pauseDom) {
+      pauseDom.style.display = settingsPanelOpen ? 'block' : 'none';
     }
 
     // Update checkboxes when opening
