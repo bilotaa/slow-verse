@@ -369,6 +369,28 @@
       #settings-menu-item.settings-active {
         background: rgba(255, 255, 255, 0.2);
       }
+
+      /* Close button */
+      .settings-close-button {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 28px;
+        height: 28px;
+        background: #999;
+        border: 1px solid #666;
+        color: #fff;
+        font-size: 18px;
+        line-height: 24px;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 4px;
+        z-index: 10;
+      }
+
+      .settings-close-button:hover {
+        background: #666;
+      }
     `;
 
     document.head.appendChild(style);
@@ -385,6 +407,7 @@
     panel.style.display = 'none'; // Initially hidden
 
     panel.innerHTML = `
+      <button class="settings-close-button" id="settings-close-button" title="Close Settings (or click settings icon again)">×</button>
       <div class="menu-panel-content">
         <!-- Section 1: Driving Controls -->
         <div class="settings-section">
