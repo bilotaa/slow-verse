@@ -735,22 +735,10 @@
     const sceneOptionList = document.getElementById('scene-option-list');
     if (!sceneOptionList) return;
 
-    // Find all scene menu items in the original menu
-    const sceneMenuItems = document.querySelectorAll('.menu-item');
-    const scenes = [];
+    // Use stored scene menu items from findStateObjects()
+    const scenes = stateObjects.sceneMenuItems || [];
 
-    sceneMenuItems.forEach(item => {
-      const img = item.querySelector('img');
-      if (img && img.alt && img.alt !== 'Settings' && img.alt !== 'Weather') {
-        // This is likely a scene item (Earth, Mars, Moon, etc.)
-        scenes.push({
-          name: img.alt,
-          element: item
-        });
-      }
-    });
-
-    // If we found scenes in the menu, populate the list
+    // If we have stored scenes, populate the list
     if (scenes.length > 0) {
       sceneOptionList.innerHTML = '';
       scenes.forEach(scene => {
@@ -765,6 +753,8 @@
         });
         sceneOptionList.appendChild(option);
       });
+    } else {
+      console.warn('[Settings Panel] No scene items found');
     }
 
     updateSceneDisplay();
