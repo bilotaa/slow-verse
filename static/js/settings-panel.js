@@ -410,7 +410,7 @@
           <div class="settings-slider-container">
             <input type="range" class="settings-slider" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
             <button class="settings-mute-button" id="mute-button">
-              <img src="./static/media/vol_high.02e36d0e.svg" alt="Volume" id="volume-icon">
+              <img src="./static/media/vol_high.30de055e.svg" alt="Volume" id="volume-icon">
             </button>
           </div>
         </div>
@@ -972,9 +972,9 @@
     if (!volumeIcon) return;
 
     if (volume === 0) {
-      volumeIcon.src = './static/media/vol_off.03e33bbd.svg';
+      volumeIcon.src = './static/media/vol_off.11497865.svg';
     } else {
-      volumeIcon.src = './static/media/vol_high.02e36d0e.svg';
+      volumeIcon.src = './static/media/vol_high.30de055e.svg';
     }
   }
 
