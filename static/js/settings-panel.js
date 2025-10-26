@@ -20,7 +20,9 @@
     setTimeout(() => {
       try {
         findStateObjects();
+        injectStyles();
         injectSettingsIcon();
+        removeMenuBarButtons();
         createSettingsPanel();
         setupEventListeners();
         console.log('[Settings Panel] Initialized successfully');
@@ -98,6 +100,222 @@
   }
 
   /**
+   * Remove all menu bar buttons except the settings icon
+   * This creates a cleaner UI with all controls in the settings panel
+   */
+  function removeMenuBarButtons() {
+    const menuBarLeft = document.getElementById('menu-bar-left');
+    const menuBarRight = document.getElementById('menu-bar-right');
+
+    if (menuBarLeft) {
+      // Remove all children except settings icon and its following divider
+      const settingsIcon = document.getElementById('settings-menu-item');
+      const children = Array.from(menuBarLeft.children);
+
+      children.forEach(child => {
+        // Keep settings icon and the divider immediately after it
+        if (child.id === 'settings-menu-item') {
+          return; // Keep settings icon
+        }
+        if (child === settingsIcon?.nextElementSibling &&
+            child.classList.contains('menu-bar-vertical-divider')) {
+          return; // Keep divider after settings icon
+        }
+        // Remove everything else
+        child.remove();
+      });
+
+      console.log('[Settings Panel] Removed left menu bar buttons');
+    }
+
+    if (menuBarRight) {
+      // Remove all children from right side
+      while (menuBarRight.firstChild) {
+        menuBarRight.removeChild(menuBarRight.firstChild);
+      }
+      console.log('[Settings Panel] Removed right menu bar buttons');
+    }
+  }
+
+  /**
+   * Inject CSS styles for the settings panel
+   */
+  function injectStyles() {
+    const styleId = 'settings-panel-styles';
+    if (document.getElementById(styleId)) return; // Already injected
+
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+      /* Settings panel width */
+      #settings-panel {
+        width: 320px !important;
+      }
+
+      /* Expand button container */
+      .settings-expand-container {
+        margin-bottom: 8px;
+      }
+
+      /* Expand button */
+      .settings-expand-button {
+        width: 100%;
+        padding: 12px;
+        background: #cccccc;
+        border: 1px solid #999;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        cursor: pointer;
+        font-family: 'Jura', sans-serif;
+        color: #000;
+      }
+
+      .settings-expand-button:hover {
+        background: #d9d9d9;
+      }
+
+      .expand-arrow {
+        font-size: 12px;
+      }
+
+      /* Option list */
+      .settings-option-list {
+        background: #fff;
+        border: 1px solid #999;
+        border-top: none;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
+      /* Option item */
+      .settings-option-item {
+        padding: 10px 12px;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 13px;
+        cursor: pointer;
+        font-family: 'Jura', sans-serif;
+        color: #000;
+      }
+
+      .settings-option-item:last-child {
+        border-bottom: none;
+      }
+
+      .settings-option-item:hover {
+        background: #f5f5f5;
+      }
+
+      .settings-option-item.selected {
+        background: #e0e0e0;
+        font-weight: bold;
+      }
+
+      /* Button group */
+      .settings-button-group {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      /* Button */
+      .settings-button {
+        flex: 1;
+        padding: 10px;
+        background: #cccccc;
+        border: 1px solid #999;
+        text-align: center;
+        font-size: 12px;
+        cursor: pointer;
+        font-family: 'Jura', sans-serif;
+        color: #000;
+      }
+
+      .settings-button:hover {
+        background: #d9d9d9;
+      }
+
+      .settings-button.active {
+        background: #999;
+        color: #fff;
+        font-weight: bold;
+      }
+
+      /* Slider container */
+      .settings-slider-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        background: #fff;
+        border: 1px solid #999;
+      }
+
+      /* Slider */
+      .settings-slider {
+        flex: 1;
+        height: 6px;
+        background: #e0e0e0;
+        border: 1px solid #999;
+        outline: none;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      .settings-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        background: #999;
+        cursor: pointer;
+        border-radius: 50%;
+      }
+
+      .settings-slider::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        background: #999;
+        cursor: pointer;
+        border-radius: 50%;
+        border: none;
+      }
+
+      /* Mute button */
+      .settings-mute-button {
+        width: 32px;
+        height: 32px;
+        background: #cccccc;
+        border: 1px solid #999;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
+      }
+
+      .settings-mute-button:hover {
+        background: #d9d9d9;
+      }
+
+      .settings-mute-button img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      /* Settings active state for icon */
+      #settings-menu-item.settings-active {
+        background: rgba(255, 255, 255, 0.2);
+      }
+    `;
+
+    document.head.appendChild(style);
+    console.log('[Settings Panel] Styles injected');
+  }
+
+  /**
    * Create the settings panel HTML structure
    */
   function createSettingsPanel() {
@@ -123,7 +341,60 @@
           </div>
         </div>
 
-        <!-- Section 2: Display -->
+        <!-- Section 2: Environment (Scene & Weather) -->
+        <div class="settings-section">
+          <div class="settings-section-title">ENVIRONMENT</div>
+
+          <!-- Scene Selector -->
+          <div class="settings-expand-container">
+            <button class="settings-expand-button" id="scene-expand-button">
+              <span><strong>Scene:</strong> <span id="scene-current-name">Loading...</span></span>
+              <span class="expand-arrow">▼</span>
+            </button>
+            <div class="settings-option-list" id="scene-option-list" style="display: none;"></div>
+          </div>
+
+          <!-- Weather Selector -->
+          <div class="settings-expand-container">
+            <button class="settings-expand-button" id="weather-expand-button">
+              <span><strong>Weather:</strong> <span id="weather-current-name">Loading...</span></span>
+              <span class="expand-arrow">▼</span>
+            </button>
+            <div class="settings-option-list" id="weather-option-list" style="display: none;"></div>
+          </div>
+        </div>
+
+        <!-- Section 3: Vehicle -->
+        <div class="settings-section">
+          <div class="settings-section-title">VEHICLE</div>
+          <div class="settings-button-group">
+            <button class="settings-button" data-vehicle="car">Car</button>
+            <button class="settings-button" data-vehicle="bus">Bus</button>
+            <button class="settings-button" data-vehicle="bike">Bike</button>
+          </div>
+        </div>
+
+        <!-- Section 4: Controls -->
+        <div class="settings-section">
+          <div class="settings-section-title">CONTROLS</div>
+          <div class="settings-button-group">
+            <button class="settings-button" data-input="2">Keyboard</button>
+            <button class="settings-button" data-input="1">Mouse</button>
+          </div>
+        </div>
+
+        <!-- Section 5: Audio -->
+        <div class="settings-section">
+          <div class="settings-section-title">AUDIO</div>
+          <div class="settings-slider-container">
+            <input type="range" class="settings-slider" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
+            <button class="settings-mute-button" id="mute-button">
+              <img src="./static/media/vol_high.02e36d0e.svg" alt="Volume" id="volume-icon">
+            </button>
+          </div>
+        </div>
+
+        <!-- Section 6: Display -->
         <div class="settings-section">
           <div class="settings-section-title">DISPLAY</div>
 
@@ -133,7 +404,7 @@
           </div>
         </div>
 
-        <!-- Section 3: Quick Actions -->
+        <!-- Section 7: Quick Actions -->
         <div class="settings-section">
           <div class="settings-section-title">QUICK ACTIONS</div>
 
@@ -222,11 +493,71 @@
       });
     }
 
-    // Setup periodic checkbox updates to keep in sync
-    setInterval(updateCheckboxes, 500);
+    // Scene expand/collapse
+    const sceneExpandButton = document.getElementById('scene-expand-button');
+    const sceneOptionList = document.getElementById('scene-option-list');
+    if (sceneExpandButton && sceneOptionList) {
+      sceneExpandButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isExpanded = sceneOptionList.style.display === 'block';
+        sceneOptionList.style.display = isExpanded ? 'none' : 'block';
+        sceneExpandButton.querySelector('.expand-arrow').textContent = isExpanded ? '▼' : '▲';
+      });
+    }
+
+    // Weather expand/collapse
+    const weatherExpandButton = document.getElementById('weather-expand-button');
+    const weatherOptionList = document.getElementById('weather-option-list');
+    if (weatherExpandButton && weatherOptionList) {
+      weatherExpandButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isExpanded = weatherOptionList.style.display === 'block';
+        weatherOptionList.style.display = isExpanded ? 'none' : 'block';
+        weatherExpandButton.querySelector('.expand-arrow').textContent = isExpanded ? '▼' : '▲';
+      });
+    }
+
+    // Vehicle buttons
+    const vehicleButtons = document.querySelectorAll('[data-vehicle]');
+    vehicleButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const vehicleType = button.dataset.vehicle;
+        changeVehicle(vehicleType);
+      });
+    });
+
+    // Input method buttons
+    const inputButtons = document.querySelectorAll('[data-input]');
+    inputButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const inputMethod = parseInt(button.dataset.input);
+        changeInputMethod(inputMethod);
+      });
+    });
+
+    // Volume slider
+    const volumeSlider = document.getElementById('volume-slider');
+    if (volumeSlider) {
+      volumeSlider.addEventListener('input', (e) => {
+        setVolume(parseFloat(e.target.value));
+      });
+    }
+
+    // Mute button
+    const muteButton = document.getElementById('mute-button');
+    if (muteButton) {
+      muteButton.addEventListener('click', toggleMute);
+    }
+
+    // Setup periodic updates to keep UI in sync
+    setInterval(updateAllControls, 500);
 
     // Setup periodic visibility enforcement to ensure menu bar and settings panel stay visible
     setInterval(ensureSettingsPanelVisible, 500);
+
+    // Initialize scene and weather lists
+    setTimeout(initializeSceneList, 500);
+    setTimeout(initializeWeatherList, 500);
 
     console.log('[Settings Panel] Event listeners setup');
   }
@@ -313,6 +644,317 @@
       if (menuBar.style.display === 'none') {
         menuBar.style.display = 'flex';
       }
+    }
+  }
+
+  /**
+   * Initialize scene list from game state
+   */
+  function initializeSceneList() {
+    const sceneOptionList = document.getElementById('scene-option-list');
+    if (!sceneOptionList) return;
+
+    // Find all scene menu items in the original menu
+    const sceneMenuItems = document.querySelectorAll('.menu-item');
+    const scenes = [];
+
+    sceneMenuItems.forEach(item => {
+      const img = item.querySelector('img');
+      if (img && img.alt && img.alt !== 'Settings' && img.alt !== 'Weather') {
+        // This is likely a scene item (Earth, Mars, Moon, etc.)
+        scenes.push({
+          name: img.alt,
+          element: item
+        });
+      }
+    });
+
+    // If we found scenes in the menu, populate the list
+    if (scenes.length > 0) {
+      sceneOptionList.innerHTML = '';
+      scenes.forEach(scene => {
+        const option = document.createElement('div');
+        option.className = 'settings-option-item';
+        option.textContent = scene.name;
+        option.addEventListener('click', () => {
+          scene.element.click();
+          updateSceneDisplay();
+          sceneOptionList.style.display = 'none';
+          document.getElementById('scene-expand-button').querySelector('.expand-arrow').textContent = '▼';
+        });
+        sceneOptionList.appendChild(option);
+      });
+    }
+
+    updateSceneDisplay();
+  }
+
+  /**
+   * Initialize weather list from game state
+   */
+  function initializeWeatherList() {
+    const weatherOptionList = document.getElementById('weather-option-list');
+    if (!weatherOptionList) return;
+
+    // Find weather menu items
+    const weatherMenuItems = document.querySelectorAll('.menu-item');
+    const weathers = [];
+
+    weatherMenuItems.forEach(item => {
+      const img = item.querySelector('img');
+      if (img && img.alt && (
+        img.alt === 'Sunrise' || img.alt === 'Clear' ||
+        img.alt === 'Rain' || img.alt === 'Sunset' || img.alt === 'Night'
+      )) {
+        weathers.push({
+          name: img.alt,
+          element: item
+        });
+      }
+    });
+
+    // If we found weathers, populate the list
+    if (weathers.length > 0) {
+      weatherOptionList.innerHTML = '';
+      weathers.forEach(weather => {
+        const option = document.createElement('div');
+        option.className = 'settings-option-item';
+        option.textContent = weather.name;
+        option.addEventListener('click', () => {
+          weather.element.click();
+          updateWeatherDisplay();
+          weatherOptionList.style.display = 'none';
+          document.getElementById('weather-expand-button').querySelector('.expand-arrow').textContent = '▼';
+        });
+        weatherOptionList.appendChild(option);
+      });
+    }
+
+    updateWeatherDisplay();
+  }
+
+  /**
+   * Update scene display in settings panel
+   */
+  function updateSceneDisplay() {
+    const sceneNameElement = document.getElementById('scene-current-name');
+    if (!sceneNameElement) return;
+
+    // Try to find the active scene from menu items
+    const sceneItems = document.querySelectorAll('.menu-item');
+    let foundScene = false;
+
+    sceneItems.forEach(item => {
+      if (item.classList.contains('menu-item-active')) {
+        const img = item.querySelector('img');
+        if (img && img.alt) {
+          sceneNameElement.textContent = img.alt;
+          foundScene = true;
+        }
+      }
+    });
+
+    if (!foundScene) {
+      sceneNameElement.textContent = 'Unknown';
+    }
+  }
+
+  /**
+   * Update weather display in settings panel
+   */
+  function updateWeatherDisplay() {
+    const weatherNameElement = document.getElementById('weather-current-name');
+    if (!weatherNameElement) return;
+
+    // Try to find active weather indicator
+    const weatherItems = document.querySelectorAll('.menu-item');
+    let foundWeather = false;
+
+    weatherItems.forEach(item => {
+      if (item.classList.contains('menu-item-active')) {
+        const img = item.querySelector('img');
+        if (img && img.alt && (
+          img.alt === 'Sunrise' || img.alt === 'Clear' ||
+          img.alt === 'Rain' || img.alt === 'Sunset' || img.alt === 'Night'
+        )) {
+          weatherNameElement.textContent = img.alt;
+          foundWeather = true;
+        }
+      }
+    });
+
+    if (!foundWeather) {
+      weatherNameElement.textContent = 'Unknown';
+    }
+  }
+
+  /**
+   * Change vehicle type
+   */
+  function changeVehicle(vehicleType) {
+    // Find the vehicle selector in the menu
+    const vehicleMenuItems = document.querySelectorAll('.menu-item');
+
+    vehicleMenuItems.forEach(item => {
+      const img = item.querySelector('img');
+      if (img && img.alt) {
+        const alt = img.alt.toLowerCase();
+        if (alt === vehicleType || alt.includes(vehicleType)) {
+          item.click();
+          setTimeout(updateVehicleButtons, 100);
+        }
+      }
+    });
+  }
+
+  /**
+   * Update vehicle button states
+   */
+  function updateVehicleButtons() {
+    const vehicleButtons = document.querySelectorAll('[data-vehicle]');
+    const vehicleMenuItems = document.querySelectorAll('.menu-item');
+
+    vehicleButtons.forEach(button => {
+      button.classList.remove('active');
+    });
+
+    vehicleMenuItems.forEach(item => {
+      if (item.classList.contains('menu-item-active')) {
+        const img = item.querySelector('img');
+        if (img && img.alt) {
+          const alt = img.alt.toLowerCase();
+          vehicleButtons.forEach(button => {
+            if (alt.includes(button.dataset.vehicle)) {
+              button.classList.add('active');
+            }
+          });
+        }
+      }
+    });
+  }
+
+  /**
+   * Change input method
+   */
+  function changeInputMethod(inputMethod) {
+    // Find the input selector in the menu
+    const inputMenuItems = document.querySelectorAll('.menu-item');
+
+    inputMenuItems.forEach(item => {
+      const img = item.querySelector('img');
+      if (img && img.alt) {
+        const alt = img.alt.toLowerCase();
+        // Input method: 1 = mouse, 2 = keyboard
+        if ((inputMethod === 1 && alt.includes('mouse')) ||
+            (inputMethod === 2 && alt.includes('keyboard'))) {
+          item.click();
+          setTimeout(updateInputButtons, 100);
+        }
+      }
+    });
+  }
+
+  /**
+   * Update input method button states
+   */
+  function updateInputButtons() {
+    const inputButtons = document.querySelectorAll('[data-input]');
+    const inputMenuItems = document.querySelectorAll('.menu-item');
+
+    inputButtons.forEach(button => {
+      button.classList.remove('active');
+    });
+
+    inputMenuItems.forEach(item => {
+      if (item.classList.contains('menu-item-active')) {
+        const img = item.querySelector('img');
+        if (img && img.alt) {
+          const alt = img.alt.toLowerCase();
+          inputButtons.forEach(button => {
+            const method = parseInt(button.dataset.input);
+            if ((method === 1 && alt.includes('mouse')) ||
+                (method === 2 && alt.includes('keyboard'))) {
+              button.classList.add('active');
+            }
+          });
+        }
+      }
+    });
+  }
+
+  /**
+   * Set audio volume
+   */
+  function setVolume(volume) {
+    // Store volume for mute/unmute
+    if (volume > 0) {
+      stateObjects.previousVolume = volume;
+    }
+
+    // Find and click on audio level controls in the menu
+    // Try to interact with the volume slider in the original menu if it exists
+    const volumeSliders = document.querySelectorAll('input[type="range"]');
+    volumeSliders.forEach(slider => {
+      if (slider.id !== 'volume-slider') { // Not our settings panel slider
+        slider.value = volume;
+        slider.dispatchEvent(new Event('input', { bubbles: true }));
+        slider.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+
+    updateVolumeIcon(volume);
+  }
+
+  /**
+   * Toggle mute/unmute
+   */
+  function toggleMute() {
+    const volumeSlider = document.getElementById('volume-slider');
+    if (!volumeSlider) return;
+
+    const currentVolume = parseFloat(volumeSlider.value);
+
+    if (currentVolume > 0) {
+      // Mute: store current volume and set to 0
+      stateObjects.previousVolume = currentVolume;
+      volumeSlider.value = 0;
+      setVolume(0);
+    } else {
+      // Unmute: restore previous volume (or default to 0.5)
+      const restoreVolume = stateObjects.previousVolume || 0.5;
+      volumeSlider.value = restoreVolume;
+      setVolume(restoreVolume);
+    }
+  }
+
+  /**
+   * Update volume icon based on current volume
+   */
+  function updateVolumeIcon(volume) {
+    const volumeIcon = document.getElementById('volume-icon');
+    if (!volumeIcon) return;
+
+    if (volume === 0) {
+      volumeIcon.src = './static/media/vol_off.03e33bbd.svg';
+    } else {
+      volumeIcon.src = './static/media/vol_high.02e36d0e.svg';
+    }
+  }
+
+  /**
+   * Update all controls to match current game state
+   */
+  function updateAllControls() {
+    updateCheckboxes();
+    updateSceneDisplay();
+    updateWeatherDisplay();
+    updateVehicleButtons();
+    updateInputButtons();
+
+    // Update volume slider and icon
+    const volumeSlider = document.getElementById('volume-slider');
+    if (volumeSlider) {
+      updateVolumeIcon(parseFloat(volumeSlider.value));
     }
   }
 
