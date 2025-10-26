@@ -137,6 +137,184 @@
   }
 
   /**
+   * Inject CSS styles for the settings panel
+   */
+  function injectStyles() {
+    const styleId = 'settings-panel-styles';
+    if (document.getElementById(styleId)) return; // Already injected
+
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+      /* Settings panel width */
+      #settings-panel {
+        width: 320px !important;
+      }
+
+      /* Expand button container */
+      .settings-expand-container {
+        margin-bottom: 8px;
+      }
+
+      /* Expand button */
+      .settings-expand-button {
+        width: 100%;
+        padding: 12px;
+        background: #cccccc;
+        border: 1px solid #999;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        cursor: pointer;
+        font-family: 'Jura', sans-serif;
+        color: #000;
+      }
+
+      .settings-expand-button:hover {
+        background: #d9d9d9;
+      }
+
+      .expand-arrow {
+        font-size: 12px;
+      }
+
+      /* Option list */
+      .settings-option-list {
+        background: #fff;
+        border: 1px solid #999;
+        border-top: none;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
+      /* Option item */
+      .settings-option-item {
+        padding: 10px 12px;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 13px;
+        cursor: pointer;
+        font-family: 'Jura', sans-serif;
+        color: #000;
+      }
+
+      .settings-option-item:last-child {
+        border-bottom: none;
+      }
+
+      .settings-option-item:hover {
+        background: #f5f5f5;
+      }
+
+      .settings-option-item.selected {
+        background: #e0e0e0;
+        font-weight: bold;
+      }
+
+      /* Button group */
+      .settings-button-group {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      /* Button */
+      .settings-button {
+        flex: 1;
+        padding: 10px;
+        background: #cccccc;
+        border: 1px solid #999;
+        text-align: center;
+        font-size: 12px;
+        cursor: pointer;
+        font-family: 'Jura', sans-serif;
+        color: #000;
+      }
+
+      .settings-button:hover {
+        background: #d9d9d9;
+      }
+
+      .settings-button.active {
+        background: #999;
+        color: #fff;
+        font-weight: bold;
+      }
+
+      /* Slider container */
+      .settings-slider-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        background: #fff;
+        border: 1px solid #999;
+      }
+
+      /* Slider */
+      .settings-slider {
+        flex: 1;
+        height: 6px;
+        background: #e0e0e0;
+        border: 1px solid #999;
+        outline: none;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      .settings-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        background: #999;
+        cursor: pointer;
+        border-radius: 50%;
+      }
+
+      .settings-slider::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        background: #999;
+        cursor: pointer;
+        border-radius: 50%;
+        border: none;
+      }
+
+      /* Mute button */
+      .settings-mute-button {
+        width: 32px;
+        height: 32px;
+        background: #cccccc;
+        border: 1px solid #999;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
+      }
+
+      .settings-mute-button:hover {
+        background: #d9d9d9;
+      }
+
+      .settings-mute-button img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      /* Settings active state for icon */
+      #settings-menu-item.settings-active {
+        background: rgba(255, 255, 255, 0.2);
+      }
+    `;
+
+    document.head.appendChild(style);
+    console.log('[Settings Panel] Styles injected');
+  }
+
+  /**
    * Create the settings panel HTML structure
    */
   function createSettingsPanel() {
