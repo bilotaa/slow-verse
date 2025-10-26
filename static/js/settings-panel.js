@@ -28,9 +28,9 @@
           findStateObjects();
           injectStyles();
           injectSettingsIcon();
-          removeMenuBarButtons();
           createSettingsPanel();
           setupEventListeners();
+          removeMenuBarButtons();
           console.log('[Settings Panel] Initialized successfully');
         } catch (error) {
           console.error('[Settings Panel] Initialization error:', error);
