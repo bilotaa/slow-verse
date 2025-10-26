@@ -632,6 +632,28 @@
       muteButton.addEventListener('click', toggleMute);
     }
 
+    // Close button
+    const closeButton = document.getElementById('settings-close-button');
+    if (closeButton) {
+      closeButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleSettingsPanel();
+      });
+    }
+
+    // Click outside to close
+    document.addEventListener('click', (e) => {
+      const settingsPanel = document.getElementById('settings-panel');
+      const settingsIcon = document.getElementById('settings-menu-item');
+
+      if (settingsPanelOpen && settingsPanel && settingsIcon) {
+        // Check if click is outside both the panel and the settings icon
+        if (!settingsPanel.contains(e.target) && !settingsIcon.contains(e.target)) {
+          toggleSettingsPanel();
+        }
+      }
+    });
+
     // Only start intervals if required elements exist
     const settingsPanel = document.getElementById('settings-panel');
     const menuBarLeft = document.getElementById('menu-bar-left');
