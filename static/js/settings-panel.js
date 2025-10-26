@@ -21,6 +21,7 @@
       try {
         findStateObjects();
         injectSettingsIcon();
+        removeMenuBarButtons();
         createSettingsPanel();
         setupEventListeners();
         console.log('[Settings Panel] Initialized successfully');
