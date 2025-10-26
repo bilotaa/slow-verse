@@ -469,6 +469,317 @@
   }
 
   /**
+   * Initialize scene list from game state
+   */
+  function initializeSceneList() {
+    const sceneOptionList = document.getElementById('scene-option-list');
+    if (!sceneOptionList) return;
+
+    // Find all scene menu items in the original menu
+    const sceneMenuItems = document.querySelectorAll('.menu-item');
+    const scenes = [];
+
+    sceneMenuItems.forEach(item => {
+      const img = item.querySelector('img');
+      if (img && img.alt && img.alt !== 'Settings' && img.alt !== 'Weather') {
+        // This is likely a scene item (Earth, Mars, Moon, etc.)
+        scenes.push({
+          name: img.alt,
+          element: item
+        });
+      }
+    });
+
+    // If we found scenes in the menu, populate the list
+    if (scenes.length > 0) {
+      sceneOptionList.innerHTML = '';
+      scenes.forEach(scene => {
+        const option = document.createElement('div');
+        option.className = 'settings-option-item';
+        option.textContent = scene.name;
+        option.addEventListener('click', () => {
+          scene.element.click();
+          updateSceneDisplay();
+          sceneOptionList.style.display = 'none';
+          document.getElementById('scene-expand-button').querySelector('.expand-arrow').textContent = '▼';
+        });
+        sceneOptionList.appendChild(option);
+      });
+    }
+
+    updateSceneDisplay();
+  }
+
+  /**
+   * Initialize weather list from game state
+   */
+  function initializeWeatherList() {
+    const weatherOptionList = document.getElementById('weather-option-list');
+    if (!weatherOptionList) return;
+
+    // Find weather menu items
+    const weatherMenuItems = document.querySelectorAll('.menu-item');
+    const weathers = [];
+
+    weatherMenuItems.forEach(item => {
+      const img = item.querySelector('img');
+      if (img && img.alt && (
+        img.alt === 'Sunrise' || img.alt === 'Clear' ||
+        img.alt === 'Rain' || img.alt === 'Sunset' || img.alt === 'Night'
+      )) {
+        weathers.push({
+          name: img.alt,
+          element: item
+        });
+      }
+    });
+
+    // If we found weathers, populate the list
+    if (weathers.length > 0) {
+      weatherOptionList.innerHTML = '';
+      weathers.forEach(weather => {
+        const option = document.createElement('div');
+        option.className = 'settings-option-item';
+        option.textContent = weather.name;
+        option.addEventListener('click', () => {
+          weather.element.click();
+          updateWeatherDisplay();
+          weatherOptionList.style.display = 'none';
+          document.getElementById('weather-expand-button').querySelector('.expand-arrow').textContent = '▼';
+        });
+        weatherOptionList.appendChild(option);
+      });
+    }
+
+    updateWeatherDisplay();
+  }
+
+  /**
+   * Update scene display in settings panel
+   */
+  function updateSceneDisplay() {
+    const sceneNameElement = document.getElementById('scene-current-name');
+    if (!sceneNameElement) return;
+
+    // Try to find the active scene from menu items
+    const sceneItems = document.querySelectorAll('.menu-item');
+    let foundScene = false;
+
+    sceneItems.forEach(item => {
+      if (item.classList.contains('menu-item-active')) {
+        const img = item.querySelector('img');
+        if (img && img.alt) {
+          sceneNameElement.textContent = img.alt;
+          foundScene = true;
+        }
+      }
+    });
+
+    if (!foundScene) {
+      sceneNameElement.textContent = 'Unknown';
+    }
+  }
+
+  /**
+   * Update weather display in settings panel
+   */
+  function updateWeatherDisplay() {
+    const weatherNameElement = document.getElementById('weather-current-name');
+    if (!weatherNameElement) return;
+
+    // Try to find active weather indicator
+    const weatherItems = document.querySelectorAll('.menu-item');
+    let foundWeather = false;
+
+    weatherItems.forEach(item => {
+      if (item.classList.contains('menu-item-active')) {
+        const img = item.querySelector('img');
+        if (img && img.alt && (
+          img.alt === 'Sunrise' || img.alt === 'Clear' ||
+          img.alt === 'Rain' || img.alt === 'Sunset' || img.alt === 'Night'
+        )) {
+          weatherNameElement.textContent = img.alt;
+          foundWeather = true;
+        }
+      }
+    });
+
+    if (!foundWeather) {
+      weatherNameElement.textContent = 'Unknown';
+    }
+  }
+
+  /**
+   * Change vehicle type
+   */
+  function changeVehicle(vehicleType) {
+    // Find the vehicle selector in the menu
+    const vehicleMenuItems = document.querySelectorAll('.menu-item');
+
+    vehicleMenuItems.forEach(item => {
+      const img = item.querySelector('img');
+      if (img && img.alt) {
+        const alt = img.alt.toLowerCase();
+        if (alt === vehicleType || alt.includes(vehicleType)) {
+          item.click();
+          setTimeout(updateVehicleButtons, 100);
+        }
+      }
+    });
+  }
+
+  /**
+   * Update vehicle button states
+   */
+  function updateVehicleButtons() {
+    const vehicleButtons = document.querySelectorAll('[data-vehicle]');
+    const vehicleMenuItems = document.querySelectorAll('.menu-item');
+
+    vehicleButtons.forEach(button => {
+      button.classList.remove('active');
+    });
+
+    vehicleMenuItems.forEach(item => {
+      if (item.classList.contains('menu-item-active')) {
+        const img = item.querySelector('img');
+        if (img && img.alt) {
+          const alt = img.alt.toLowerCase();
+          vehicleButtons.forEach(button => {
+            if (alt.includes(button.dataset.vehicle)) {
+              button.classList.add('active');
+            }
+          });
+        }
+      }
+    });
+  }
+
+  /**
+   * Change input method
+   */
+  function changeInputMethod(inputMethod) {
+    // Find the input selector in the menu
+    const inputMenuItems = document.querySelectorAll('.menu-item');
+
+    inputMenuItems.forEach(item => {
+      const img = item.querySelector('img');
+      if (img && img.alt) {
+        const alt = img.alt.toLowerCase();
+        // Input method: 1 = mouse, 2 = keyboard
+        if ((inputMethod === 1 && alt.includes('mouse')) ||
+            (inputMethod === 2 && alt.includes('keyboard'))) {
+          item.click();
+          setTimeout(updateInputButtons, 100);
+        }
+      }
+    });
+  }
+
+  /**
+   * Update input method button states
+   */
+  function updateInputButtons() {
+    const inputButtons = document.querySelectorAll('[data-input]');
+    const inputMenuItems = document.querySelectorAll('.menu-item');
+
+    inputButtons.forEach(button => {
+      button.classList.remove('active');
+    });
+
+    inputMenuItems.forEach(item => {
+      if (item.classList.contains('menu-item-active')) {
+        const img = item.querySelector('img');
+        if (img && img.alt) {
+          const alt = img.alt.toLowerCase();
+          inputButtons.forEach(button => {
+            const method = parseInt(button.dataset.input);
+            if ((method === 1 && alt.includes('mouse')) ||
+                (method === 2 && alt.includes('keyboard'))) {
+              button.classList.add('active');
+            }
+          });
+        }
+      }
+    });
+  }
+
+  /**
+   * Set audio volume
+   */
+  function setVolume(volume) {
+    // Store volume for mute/unmute
+    if (volume > 0) {
+      stateObjects.previousVolume = volume;
+    }
+
+    // Find and click on audio level controls in the menu
+    // Try to interact with the volume slider in the original menu if it exists
+    const volumeSliders = document.querySelectorAll('input[type="range"]');
+    volumeSliders.forEach(slider => {
+      if (slider.id !== 'volume-slider') { // Not our settings panel slider
+        slider.value = volume;
+        slider.dispatchEvent(new Event('input', { bubbles: true }));
+        slider.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+
+    updateVolumeIcon(volume);
+  }
+
+  /**
+   * Toggle mute/unmute
+   */
+  function toggleMute() {
+    const volumeSlider = document.getElementById('volume-slider');
+    if (!volumeSlider) return;
+
+    const currentVolume = parseFloat(volumeSlider.value);
+
+    if (currentVolume > 0) {
+      // Mute: store current volume and set to 0
+      stateObjects.previousVolume = currentVolume;
+      volumeSlider.value = 0;
+      setVolume(0);
+    } else {
+      // Unmute: restore previous volume (or default to 0.5)
+      const restoreVolume = stateObjects.previousVolume || 0.5;
+      volumeSlider.value = restoreVolume;
+      setVolume(restoreVolume);
+    }
+  }
+
+  /**
+   * Update volume icon based on current volume
+   */
+  function updateVolumeIcon(volume) {
+    const volumeIcon = document.getElementById('volume-icon');
+    if (!volumeIcon) return;
+
+    if (volume === 0) {
+      volumeIcon.src = './static/media/vol_off.03e33bbd.svg';
+    } else {
+      volumeIcon.src = './static/media/vol_high.02e36d0e.svg';
+    }
+  }
+
+  /**
+   * Update all controls to match current game state
+   */
+  function updateAllControls() {
+    updateCheckboxes();
+    updateSceneDisplay();
+    updateWeatherDisplay();
+    updateVehicleButtons();
+    updateInputButtons();
+
+    // Update volume slider and icon
+    const volumeSlider = document.getElementById('volume-slider');
+    if (volumeSlider) {
+      updateVolumeIcon(parseFloat(volumeSlider.value));
+    }
+  }
+
+  /**
    * Simulate a keyboard press to trigger game shortcuts
    */
   function simulateKeyPress(key) {
