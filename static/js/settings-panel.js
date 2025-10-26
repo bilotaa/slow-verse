@@ -767,24 +767,10 @@
     const weatherOptionList = document.getElementById('weather-option-list');
     if (!weatherOptionList) return;
 
-    // Find weather menu items
-    const weatherMenuItems = document.querySelectorAll('.menu-item');
-    const weathers = [];
+    // Use stored weather menu items from findStateObjects()
+    const weathers = stateObjects.weatherMenuItems || [];
 
-    weatherMenuItems.forEach(item => {
-      const img = item.querySelector('img');
-      if (img && img.alt && (
-        img.alt === 'Sunrise' || img.alt === 'Clear' ||
-        img.alt === 'Rain' || img.alt === 'Sunset' || img.alt === 'Night'
-      )) {
-        weathers.push({
-          name: img.alt,
-          element: item
-        });
-      }
-    });
-
-    // If we found weathers, populate the list
+    // If we have stored weathers, populate the list
     if (weathers.length > 0) {
       weatherOptionList.innerHTML = '';
       weathers.forEach(weather => {
@@ -799,6 +785,8 @@
         });
         weatherOptionList.appendChild(option);
       });
+    } else {
+      console.warn('[Settings Panel] No weather items found');
     }
 
     updateWeatherDisplay();
