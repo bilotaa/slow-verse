@@ -200,9 +200,10 @@ body {
     position: absolute;
     bottom: 250px;
     z-index: 100;
+    display: none !important;
   }
   #ui-mouse-prompt {
-    display: none;
+    display: none !important;
     position: absolute;
     width: 100%;
     bottom: 20vh;
@@ -956,7 +957,7 @@ body {
     left: 100%;
     height: 100%;
     top: -20%;
-    display: flex;
+    display: none !important;
     margin-left: 1vh;
     align-items: stretch;
   }
