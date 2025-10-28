@@ -1,49 +1,52 @@
 /**
- * Settings Panel Overlay for Speed Verse
- * Injects a unified settings panel into the game UI
+ * Redesigned Settings Panel with Cyberpunk/Synthwave Theme
+ * Speed Verse Game UI Overhaul
  */
 
 (function() {
   'use strict';
 
-  let settingsPanelOpen = false;
-  let stateObjects = {}; // Will store references to game state objects
+  let settingsModalOpen = false;
+  let stateObjects = {};
+  let trajectoryPathData = [];
+  let currentMusicTrack = {
+    title: 'Midnight Drive',
+    artist: 'Synthwave Mix',
+    genre: 'Synthwave'
+  };
 
-  // Wait for the page to be fully loaded and React to render
+  /**
+   * Initialize on page load
+   */
   function init() {
     let initAttempts = 0;
-    const maxAttempts = 60; // 30 seconds with 500ms checks
+    const maxAttempts = 60;
     let checkInterval = null;
 
     function tryInitialize() {
       initAttempts++;
 
-      // Check if required elements exist
+      // Check if game elements exist
       const menuBarLeft = document.getElementById('menu-bar-left');
+      const mainStats = document.getElementById('main-stats');
 
-      if (menuBarLeft) {
-        // Elements exist - initialize!
+      if (menuBarLeft && mainStats) {
         clearInterval(checkInterval);
         try {
           findStateObjects();
-          injectStyles();
-          injectSettingsIcon();
-          createSettingsPanel();
-          setupEventListeners();
-          removeMenuBarButtons();
-          console.log('[Settings Panel] Initialized successfully');
+          injectAllUIElements();
+          setupAllEventListeners();
+          startAutodriveMonitoring();
+          console.log('[UI Overhaul] Initialization complete');
         } catch (error) {
-          console.error('[Settings Panel] Initialization error:', error);
+          console.error('[UI Overhaul] Initialization error:', error);
         }
       } else if (initAttempts >= maxAttempts) {
-        // Timeout - give up silently
         clearInterval(checkInterval);
-        console.log('[Settings Panel] Menu bar not found after 30s, giving up');
+        console.log('[UI Overhaul] Timeout after 30s');
       }
-      // Otherwise keep checking
     }
 
-    // Start checking every 500ms
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
         checkInterval = setInterval(tryInitialize, 500);
@@ -55,17 +58,11 @@
 
   /**
    * Find and store references to game state objects
-   * These are exposed on the window object by the game
    */
   function findStateObjects() {
-    // Find the autodrive state object (referenced as 'y' in minified code)
-    // We'll need to access it through the React component instance
-    // For now, we'll interact directly with the DOM elements
-
-    // Store reference to existing autodrive button for synchronization
     stateObjects.autodriveButton = document.getElementById('autodrive');
 
-    // Store references to menu items BEFORE they are removed
+    // Store menu items before they're hidden
     stateObjects.sceneMenuItems = [];
     stateObjects.weatherMenuItems = [];
     stateObjects.vehicleMenuItems = [];
@@ -76,29 +73,19 @@
       const img = item.querySelector('img');
       if (img && img.alt) {
         const alt = img.alt;
-
-        // Categorize menu items by type
-        // Scenes: Earth, Mars, Moon, Venus
         if (alt === 'Earth' || alt === 'Mars' || alt === 'Moon' || alt === 'Venus') {
           stateObjects.sceneMenuItems.push({ name: alt, element: item });
-        }
-        // Weather: Sunrise, Clear, Rain, Sunset, Night
-        else if (alt === 'Sunrise' || alt === 'Clear' || alt === 'Rain' || alt === 'Sunset' || alt === 'Night') {
+        } else if (alt === 'Sunrise' || alt === 'Clear' || alt === 'Rain' || alt === 'Sunset' || alt === 'Night') {
           stateObjects.weatherMenuItems.push({ name: alt, element: item });
-        }
-        // Vehicles: Car, Bus, Bike
-        else if (alt === 'Car' || alt === 'Bus' || alt === 'Bike') {
+        } else if (alt === 'Car' || alt === 'Bus' || alt === 'Bike') {
           stateObjects.vehicleMenuItems.push({ name: alt, element: item });
-        }
-        // Input methods: Mouse, Keyboard
-        else if (alt === 'Mouse' || alt === 'Keyboard') {
+        } else if (alt === 'Mouse' || alt === 'Keyboard') {
           stateObjects.inputMenuItems.push({ name: alt, element: item });
         }
       }
     });
 
-    console.log('[Settings Panel] State objects located');
-    console.log('[Settings Panel] Stored menu items:', {
+    console.log('[UI Overhaul] State objects located:', {
       scenes: stateObjects.sceneMenuItems.length,
       weather: stateObjects.weatherMenuItems.length,
       vehicles: stateObjects.vehicleMenuItems.length,
@@ -107,952 +94,688 @@
   }
 
   /**
-   * Inject settings icon into menu bar
+   * Inject all new UI elements
    */
-  function injectSettingsIcon() {
-    const menuBarLeft = document.getElementById('menu-bar-left');
-    if (!menuBarLeft) {
-      console.error('[Settings Panel] Could not find menu-bar-left');
-      return;
-    }
-
-    // Create settings menu item
-    const settingsItem = document.createElement('div');
-    settingsItem.className = 'menu-item';
-    settingsItem.id = 'settings-menu-item';
-    settingsItem.tabIndex = -1;
-
-    // Create icon element
-    const iconImg = document.createElement('img');
-    iconImg.className = 'menu-icon';
-    iconImg.src = './static/media/config.fa1e0797.svg';
-    iconImg.alt = 'Settings';
-
-    settingsItem.appendChild(iconImg);
-
-    // Add click handler to toggle panel
-    settingsItem.addEventListener('mousedown', toggleSettingsPanel);
-
-    // Add mouse enter/leave handlers to disable game mouse controls
-    settingsItem.addEventListener('mouseenter', () => {
-      if (window.p && window.p.setMouseEnabled) {
-        window.p.setMouseEnabled(false);
-      }
-    });
-
-    settingsItem.addEventListener('mouseleave', () => {
-      if (window.p && window.p.setMouseEnabled) {
-        window.p.setMouseEnabled(true);
-      }
-    });
-
-    // Insert as 4th item (after scene, weather, terrain, before divider)
-    // Find the first vertical divider
-    const divider = menuBarLeft.querySelector('.menu-bar-vertical-divider');
-    if (divider) {
-      menuBarLeft.insertBefore(settingsItem, divider);
-    } else {
-      menuBarLeft.appendChild(settingsItem);
-    }
-
-    console.log('[Settings Panel] Settings icon injected');
+  function injectAllUIElements() {
+    injectTopRightControls();
+    injectDriveModeIndicator();
+    injectMusicPlayerWidget();
+    injectTrajectoryMap();
+    injectModalOverlay();
+    injectSettingsModal();
+    console.log('[UI Overhaul] All UI elements injected');
   }
 
   /**
-   * Hide all menu bar buttons except the settings icon
-   * This creates a cleaner UI with all controls in the settings panel
-   * Elements are hidden instead of removed so their click handlers still work
+   * Inject top-right controls (menu button + autodrive status)
    */
-  function removeMenuBarButtons() {
-    const menuBarLeft = document.getElementById('menu-bar-left');
-    const menuBarRight = document.getElementById('menu-bar-right');
+  function injectTopRightControls() {
+    const container = document.createElement('div');
+    container.id = 'top-right-controls';
+    container.innerHTML = `
+      <button id="menu-toggle-button">
+        <span class="menu-icon">☰</span>
+        <span>Menu</span>
+      </button>
+      <div id="autodrive-status">
+        <div>AUTO DRIVE</div>
+        <div class="autodrive-state">OFF</div>
+      </div>
+    `;
+    document.body.appendChild(container);
+  }
 
-    if (menuBarLeft) {
-      // Hide all children except settings icon and its following divider
-      const settingsIcon = document.getElementById('settings-menu-item');
-      const children = Array.from(menuBarLeft.children);
-
-      children.forEach(child => {
-        // Keep settings icon and the divider immediately after it visible
-        if (child.id === 'settings-menu-item') {
-          return; // Keep settings icon
-        }
-        if (child === settingsIcon?.nextElementSibling &&
-            child.classList.contains('menu-bar-vertical-divider')) {
-          return; // Keep divider after settings icon
-        }
-        // Hide everything else
-        child.style.display = 'none';
-      });
-
-      console.log('[Settings Panel] Hidden left menu bar buttons');
-    }
-
-    if (menuBarRight) {
-      // Hide all children from right side
-      Array.from(menuBarRight.children).forEach(child => {
-        child.style.display = 'none';
-      });
-      console.log('[Settings Panel] Hidden right menu bar buttons');
+  /**
+   * Inject drive mode indicator (AWD/FWD/RWD)
+   */
+  function injectDriveModeIndicator() {
+    const mainStats = document.getElementById('main-stats');
+    if (mainStats) {
+      const driveModeDiv = document.createElement('div');
+      driveModeDiv.id = 'drive-mode-indicator';
+      driveModeDiv.textContent = 'AWD';
+      mainStats.appendChild(driveModeDiv);
     }
   }
 
   /**
-   * Inject CSS styles for the settings panel
+   * Inject music player widget
    */
-  function injectStyles() {
-    const styleId = 'settings-panel-styles';
-    if (document.getElementById(styleId)) return; // Already injected
+  function injectMusicPlayerWidget() {
+    const widget = document.createElement('div');
+    widget.id = 'music-player-widget';
+    widget.innerHTML = `
+      <div class="music-player-icon">♪</div>
+      <div class="music-player-info">
+        <div class="music-player-title" id="widget-music-title">${currentMusicTrack.title}</div>
+        <div class="music-player-subtitle" id="widget-music-subtitle">${currentMusicTrack.artist}</div>
+      </div>
+    `;
+    document.body.appendChild(widget);
+  }
 
-    const style = document.createElement('style');
-    style.id = styleId;
-    style.textContent = `
-      /* Settings panel width */
-      #settings-panel {
-        width: 320px !important;
-      }
+  /**
+   * Inject trajectory map
+   */
+  function injectTrajectoryMap() {
+    const trajectoryDiv = document.createElement('div');
+    trajectoryDiv.id = 'trajectory-map';
+    trajectoryDiv.innerHTML = `
+      <div class="trajectory-label">MAP</div>
+      <canvas id="trajectory-canvas" width="200" height="150"></canvas>
+    `;
+    document.body.appendChild(trajectoryDiv);
 
-      /* Expand button container */
-      .settings-expand-container {
-        margin-bottom: 8px;
-      }
+    // Start trajectory rendering
+    startTrajectoryRendering();
+  }
 
-      /* Expand button */
-      .settings-expand-button {
-        width: 100%;
-        padding: 12px;
-        background: #cccccc;
-        border: 1px solid #999;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 14px;
-        cursor: pointer;
-        font-family: 'Jura', sans-serif;
-        color: #000;
-      }
+  /**
+   * Inject modal overlay
+   */
+  function injectModalOverlay() {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.id = 'modal-overlay';
+    document.body.appendChild(overlay);
+  }
 
-      .settings-expand-button:hover {
-        background: #d9d9d9;
-      }
+  /**
+   * Inject settings modal
+   */
+  function injectSettingsModal() {
+    const modal = document.createElement('div');
+    modal.className = 'settings-modal';
+    modal.id = 'settings-modal';
+    modal.style.display = 'none';
 
-      .expand-arrow {
-        font-size: 12px;
-      }
+    modal.innerHTML = `
+      <div class="settings-modal-header">
+        <div class="settings-modal-title">
+          <span class="settings-icon">⚙</span>
+          <span>Game Settings</span>
+        </div>
+        <button class="settings-close-btn" id="settings-close-button">×</button>
+      </div>
 
-      /* Option list */
-      .settings-option-list {
-        background: #fff;
-        border: 1px solid #999;
-        border-top: none;
-        max-height: 200px;
-        overflow-y: auto;
-      }
+      <div class="settings-tabs">
+        <button class="settings-tab active" data-tab="stats">
+          <span class="tab-icon">📊</span>
+          <span>Stats</span>
+        </button>
+        <button class="settings-tab" data-tab="music">
+          <span class="tab-icon">♪</span>
+          <span>Music</span>
+        </button>
+        <button class="settings-tab" data-tab="world">
+          <span class="tab-icon">🌍</span>
+          <span>World</span>
+        </button>
+        <button class="settings-tab" data-tab="settings">
+          <span class="tab-icon">⚙</span>
+          <span>Settings</span>
+        </button>
+      </div>
 
-      /* Option item */
-      .settings-option-item {
-        padding: 10px 12px;
-        border-bottom: 1px solid #e0e0e0;
-        font-size: 13px;
-        cursor: pointer;
-        font-family: 'Jura', sans-serif;
-        color: #000;
-      }
-
-      .settings-option-item:last-child {
-        border-bottom: none;
-      }
-
-      .settings-option-item:hover {
-        background: #f5f5f5;
-      }
-
-      .settings-option-item.selected {
-        background: #e0e0e0;
-        font-weight: bold;
-      }
-
-      /* Button group */
-      .settings-button-group {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 8px;
-      }
-
-      /* Button */
-      .settings-button {
-        flex: 1;
-        padding: 10px;
-        background: #cccccc;
-        border: 1px solid #999;
-        text-align: center;
-        font-size: 12px;
-        cursor: pointer;
-        font-family: 'Jura', sans-serif;
-        color: #000;
-      }
-
-      .settings-button:hover {
-        background: #d9d9d9;
-      }
-
-      .settings-button.active {
-        background: #999;
-        color: #fff;
-        font-weight: bold;
-      }
-
-      /* Slider container */
-      .settings-slider-container {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px;
-        background: #fff;
-        border: 1px solid #999;
-      }
-
-      /* Slider */
-      .settings-slider {
-        flex: 1;
-        height: 6px;
-        background: #e0e0e0;
-        border: 1px solid #999;
-        outline: none;
-        -webkit-appearance: none;
-        appearance: none;
-      }
-
-      .settings-slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 16px;
-        height: 16px;
-        background: #999;
-        cursor: pointer;
-        border-radius: 50%;
-      }
-
-      .settings-slider::-moz-range-thumb {
-        width: 16px;
-        height: 16px;
-        background: #999;
-        cursor: pointer;
-        border-radius: 50%;
-        border: none;
-      }
-
-      /* Mute button */
-      .settings-mute-button {
-        width: 32px;
-        height: 32px;
-        background: #cccccc;
-        border: 1px solid #999;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 4px;
-      }
-
-      .settings-mute-button:hover {
-        background: #d9d9d9;
-      }
-
-      .settings-mute-button img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
-
-      /* Settings active state for icon */
-      #settings-menu-item.settings-active {
-        background: rgba(255, 255, 255, 0.2);
-      }
-
-      /* Close button */
-      .settings-close-button {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        width: 28px;
-        height: 28px;
-        background: #999;
-        border: 1px solid #666;
-        color: #fff;
-        font-size: 18px;
-        line-height: 24px;
-        text-align: center;
-        cursor: pointer;
-        border-radius: 4px;
-        z-index: 10;
-      }
-
-      .settings-close-button:hover {
-        background: #666;
-      }
+      <div class="settings-content">
+        ${getStatsTabHTML()}
+        ${getMusicTabHTML()}
+        ${getWorldTabHTML()}
+        ${getSettingsTabHTML()}
+      </div>
     `;
 
-    document.head.appendChild(style);
-    console.log('[Settings Panel] Styles injected');
+    document.body.appendChild(modal);
   }
 
   /**
-   * Create the settings panel HTML structure
+   * Get HTML for Stats tab
    */
-  function createSettingsPanel() {
-    const panel = document.createElement('div');
-    panel.className = 'menu-panel';
-    panel.id = 'settings-panel';
-    panel.style.display = 'none'; // Initially hidden
-
-    panel.innerHTML = `
-      <button class="settings-close-button" id="settings-close-button" title="Close Settings (or click settings icon again)">×</button>
-      <div class="menu-panel-content">
-        <!-- Section 1: Driving Controls -->
-        <div class="settings-section">
-          <div class="settings-section-title">DRIVING CONTROLS</div>
-
-          <div class="settings-item" data-control="autodrive">
-            <div class="settings-checkbox" id="settings-autodrive-checkbox"></div>
-            <span>Autodrive</span>
+  function getStatsTabHTML() {
+    return `
+      <div class="tab-panel active" id="tab-stats">
+        <div class="stats-section">
+          <h3 class="stats-heading">Current Session</h3>
+          <div class="stat-row">
+            <span class="stat-label">Distance Traveled</span>
+            <span class="stat-value" id="stat-distance">0.0 km</span>
           </div>
-
-          <div class="settings-item" data-control="headlights">
-            <div class="settings-checkbox" id="settings-headlights-checkbox"></div>
-            <span>Headlights</span>
+          <div class="stat-row">
+            <span class="stat-label">Top Speed</span>
+            <span class="stat-value" id="stat-top-speed">0 MPH</span>
           </div>
-        </div>
-
-        <!-- Section 2: Environment (Scene & Weather) -->
-        <div class="settings-section">
-          <div class="settings-section-title">ENVIRONMENT</div>
-
-          <!-- Scene Selector -->
-          <div class="settings-expand-container">
-            <button class="settings-expand-button" id="scene-expand-button">
-              <span><strong>Scene:</strong> <span id="scene-current-name">Loading...</span></span>
-              <span class="expand-arrow">▼</span>
-            </button>
-            <div class="settings-option-list" id="scene-option-list" style="display: none;"></div>
+          <div class="stat-row">
+            <span class="stat-label">Average Speed</span>
+            <span class="stat-value" id="stat-avg-speed">0 MPH</span>
           </div>
-
-          <!-- Weather Selector -->
-          <div class="settings-expand-container">
-            <button class="settings-expand-button" id="weather-expand-button">
-              <span><strong>Weather:</strong> <span id="weather-current-name">Loading...</span></span>
-              <span class="expand-arrow">▼</span>
-            </button>
-            <div class="settings-option-list" id="weather-option-list" style="display: none;"></div>
+          <div class="stat-row">
+            <span class="stat-label">Play Time</span>
+            <span class="stat-value" id="stat-play-time">0 min</span>
           </div>
         </div>
 
-        <!-- Section 3: Vehicle -->
-        <div class="settings-section">
-          <div class="settings-section-title">VEHICLE</div>
-          <div class="settings-button-group">
-            <button class="settings-button" data-vehicle="car">Car</button>
-            <button class="settings-button" data-vehicle="bus">Bus</button>
-            <button class="settings-button" data-vehicle="bike">Bike</button>
+        <div class="stats-section">
+          <h3 class="stats-heading">Vehicle Info</h3>
+          <div class="stat-row">
+            <span class="stat-label">Current Vehicle</span>
+            <span class="stat-value" id="stat-vehicle">Car</span>
           </div>
-        </div>
-
-        <!-- Section 4: Controls -->
-        <div class="settings-section">
-          <div class="settings-section-title">CONTROLS</div>
-          <div class="settings-button-group">
-            <button class="settings-button" data-input="2">Keyboard</button>
-            <button class="settings-button" data-input="1">Mouse</button>
-          </div>
-        </div>
-
-        <!-- Section 5: Audio -->
-        <div class="settings-section">
-          <div class="settings-section-title">AUDIO</div>
-          <div class="settings-slider-container">
-            <input type="range" class="settings-slider" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
-            <button class="settings-mute-button" id="mute-button">
-              <img src="./static/media/vol_high.30de055e.svg" alt="Volume" id="volume-icon">
-            </button>
-          </div>
-        </div>
-
-        <!-- Section 6: Display -->
-        <div class="settings-section">
-          <div class="settings-section-title">DISPLAY</div>
-
-          <div class="settings-item" data-control="showui">
-            <div class="settings-checkbox" id="settings-showui-checkbox"></div>
-            <span>Show UI Elements</span>
-          </div>
-        </div>
-
-        <!-- Section 7: Quick Actions -->
-        <div class="settings-section">
-          <div class="settings-section-title">QUICK ACTIONS</div>
-
-          <div class="settings-action-item">
-            <button class="settings-action-button" data-action="reset">Reset Vehicle (R)</button>
-          </div>
-
-          <div class="settings-action-item">
-            <button class="settings-action-button" data-action="camera">Change Camera (C)</button>
+          <div class="stat-row">
+            <span class="stat-label">Drive Type</span>
+            <span class="stat-value">AWD</span>
           </div>
         </div>
       </div>
     `;
-
-    // Add mouse enter/leave handlers to disable game mouse controls
-    panel.addEventListener('mouseenter', () => {
-      if (window.p && window.p.setMouseEnabled) {
-        window.p.setMouseEnabled(false);
-      }
-    });
-
-    panel.addEventListener('mouseleave', () => {
-      if (window.p && window.p.setMouseEnabled) {
-        window.p.setMouseEnabled(true);
-      }
-    });
-
-    // Append to body or menu-bar
-    const menuBar = document.getElementById('menu-bar');
-    if (menuBar && menuBar.parentNode) {
-      menuBar.parentNode.insertBefore(panel, menuBar.nextSibling);
-    } else {
-      document.body.appendChild(panel);
-    }
-
-    console.log('[Settings Panel] Panel created');
   }
 
   /**
-   * Setup event listeners for all controls
+   * Get HTML for Music tab
    */
-  function setupEventListeners() {
+  function getMusicTabHTML() {
+    return `
+      <div class="tab-panel" id="tab-music">
+        <div class="now-playing-section">
+          <div class="section-label">NOW PLAYING</div>
+          <div class="now-playing-card">
+            <div class="now-playing-title" id="current-song-title">${currentMusicTrack.title}</div>
+            <div class="now-playing-artist" id="current-song-artist">${currentMusicTrack.artist}</div>
+            <div class="now-playing-genre" id="current-song-genre">${currentMusicTrack.genre}</div>
+
+            <div class="player-controls">
+              <button class="player-btn" id="play-pause-btn">⏸</button>
+              <button class="player-btn" id="next-btn">⏭</button>
+              <button class="player-btn" id="volume-btn">🔊</button>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-section">
+          <input type="text" class="search-input" id="song-search" placeholder="Search by title, artist, or genre...">
+        </div>
+
+        <div class="playlist-section" id="playlist-section">
+          <div class="playlist-item active" data-track-id="0">
+            <div class="playlist-title">Midnight Drive</div>
+            <div class="playlist-artist">Synthwave Mix</div>
+          </div>
+          <div class="playlist-item" data-track-id="1">
+            <div class="playlist-title">Neon Nights</div>
+            <div class="playlist-artist">Electric Dreams</div>
+          </div>
+          <div class="playlist-item" data-track-id="2">
+            <div class="playlist-title">Cyber Highway</div>
+            <div class="playlist-artist">Retro Vision</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Get HTML for World tab
+   */
+  function getWorldTabHTML() {
+    return `
+      <div class="tab-panel" id="tab-world">
+        <div class="setting-group">
+          <label class="setting-label">Scene Type</label>
+          <select class="setting-select" id="scene-type-select">
+            <option value="earth">Earth</option>
+            <option value="mars">Mars</option>
+            <option value="venus">Venus</option>
+            <option value="moon">Moon</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">Weather / Time</label>
+          <div class="button-group" id="weather-button-group">
+            <button class="option-btn" data-weather="sunrise">Sunrise</button>
+            <button class="option-btn active" data-weather="clear">Clear</button>
+            <button class="option-btn" data-weather="rain">Rain</button>
+            <button class="option-btn" data-weather="sunset">Sunset</button>
+            <button class="option-btn" data-weather="night">Night</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">Vehicle</label>
+          <div class="button-group">
+            <button class="option-btn active" data-vehicle="car">Car</button>
+            <button class="option-btn" data-vehicle="bus">Bus</button>
+            <button class="option-btn" data-vehicle="bike">Bike</button>
+          </div>
+        </div>
+
+        <button class="apply-changes-btn" id="apply-world-changes">
+          ✓ Apply Changes
+        </button>
+      </div>
+    `;
+  }
+
+  /**
+   * Get HTML for Settings tab
+   */
+  function getSettingsTabHTML() {
+    return `
+      <div class="tab-panel" id="tab-settings">
+        <div class="setting-group">
+          <label class="setting-label">Driving Controls</label>
+          <div class="toggle-item" id="autodrive-toggle">
+            <span>Autodrive</span>
+            <div class="toggle-switch">
+              <input type="checkbox" id="autodrive-checkbox">
+              <span class="slider"></span>
+            </div>
+          </div>
+          <div class="toggle-item" id="headlights-toggle">
+            <span>Headlights (H)</span>
+            <div class="toggle-switch">
+              <input type="checkbox" id="headlights-checkbox">
+              <span class="slider"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">Display</label>
+          <div class="toggle-item" id="show-ui-toggle">
+            <span>Show UI Elements (U)</span>
+            <div class="toggle-switch">
+              <input type="checkbox" id="show-ui-checkbox" checked>
+              <span class="slider"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">Input Method</label>
+          <div class="button-group">
+            <button class="option-btn active" data-input="keyboard">Keyboard</button>
+            <button class="option-btn" data-input="mouse">Mouse</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">Quick Actions</label>
+          <button class="action-btn" id="reset-vehicle-btn">Reset Vehicle (R)</button>
+          <button class="action-btn" id="change-camera-btn">Change Camera (C)</button>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Setup all event listeners
+   */
+  function setupAllEventListeners() {
+    // Menu toggle button
+    const menuToggleBtn = document.getElementById('menu-toggle-button');
+    if (menuToggleBtn) {
+      menuToggleBtn.addEventListener('click', toggleSettingsModal);
+    }
+
+    // Music player widget (click to open Music tab)
+    const musicWidget = document.getElementById('music-player-widget');
+    if (musicWidget) {
+      musicWidget.addEventListener('click', () => {
+        openSettingsModal('music');
+      });
+    }
+
+    // Modal close button
+    const closeBtn = document.getElementById('settings-close-button');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', toggleSettingsModal);
+    }
+
+    // Modal overlay click
+    const overlay = document.getElementById('modal-overlay');
+    if (overlay) {
+      overlay.addEventListener('click', toggleSettingsModal);
+    }
+
+    // Tab switching
+    setupTabSwitching();
+
+    // Stats tab
+    setupStatsTab();
+
+    // Music tab
+    setupMusicTab();
+
+    // World tab
+    setupWorldTab();
+
+    // Settings tab
+    setupSettingsTab();
+
+    console.log('[UI Overhaul] Event listeners setup complete');
+  }
+
+  /**
+   * Setup tab switching
+   */
+  function setupTabSwitching() {
+    const tabs = document.querySelectorAll('.settings-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.dataset.tab;
+        switchToTab(tabName);
+      });
+    });
+  }
+
+  /**
+   * Switch to specific tab
+   */
+  function switchToTab(tabName) {
+    // Update tab buttons
+    document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+    const activeTab = document.querySelector(`.settings-tab[data-tab="${tabName}"]`);
+    if (activeTab) {
+      activeTab.classList.add('active');
+    }
+
+    // Show corresponding panel
+    document.querySelectorAll('.tab-panel').forEach(panel => {
+      panel.classList.remove('active');
+      panel.style.display = 'none';
+    });
+    const activePanel = document.getElementById(`tab-${tabName}`);
+    if (activePanel) {
+      activePanel.classList.add('active');
+      activePanel.style.display = 'block';
+    }
+
+    // Update stats if opening stats tab
+    if (tabName === 'stats') {
+      updateStatsDisplay();
+    }
+  }
+
+  /**
+   * Setup Stats tab
+   */
+  function setupStatsTab() {
+    // Stats will be updated when modal opens
+    updateStatsDisplay();
+  }
+
+  /**
+   * Update stats display
+   */
+  function updateStatsDisplay() {
+    // Try to get stats from game state
+    try {
+      // Distance from #ui-dist if available
+      const distElem = document.querySelector('#ui-dist .ui-stat-val');
+      if (distElem) {
+        document.getElementById('stat-distance').textContent = distElem.textContent + ' km';
+      }
+
+      // Speed from #ui-speed
+      const speedElem = document.querySelector('#ui-speed .ui-stat-val');
+      if (speedElem) {
+        document.getElementById('stat-top-speed').textContent = speedElem.textContent + ' MPH';
+        document.getElementById('stat-avg-speed').textContent = speedElem.textContent + ' MPH';
+      }
+
+      // Vehicle from active menu item
+      const activeVehicle = stateObjects.vehicleMenuItems.find(v =>
+        v.element.classList.contains('menu-item-active')
+      );
+      if (activeVehicle) {
+        document.getElementById('stat-vehicle').textContent = activeVehicle.name;
+      }
+    } catch (error) {
+      console.warn('[UI Overhaul] Error updating stats:', error);
+    }
+  }
+
+  /**
+   * Setup Music tab
+   */
+  function setupMusicTab() {
+    // Play/pause button
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    if (playPauseBtn) {
+      playPauseBtn.addEventListener('click', () => {
+        // Toggle play/pause icon
+        playPauseBtn.textContent = playPauseBtn.textContent === '⏸' ? '▶' : '⏸';
+      });
+    }
+
+    // Next button
+    const nextBtn = document.getElementById('next-btn');
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        // Play next track
+        const items = document.querySelectorAll('.playlist-item');
+        const activeItem = document.querySelector('.playlist-item.active');
+        if (activeItem && activeItem.nextElementSibling) {
+          activeItem.classList.remove('active');
+          activeItem.nextElementSibling.classList.add('active');
+          updateNowPlaying(activeItem.nextElementSibling);
+        }
+      });
+    }
+
+    // Playlist items
+    const playlistItems = document.querySelectorAll('.playlist-item');
+    playlistItems.forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.playlist-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        updateNowPlaying(item);
+      });
+    });
+
+    // Search input
+    const searchInput = document.getElementById('song-search');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const items = document.querySelectorAll('.playlist-item');
+        items.forEach(item => {
+          const title = item.querySelector('.playlist-title').textContent.toLowerCase();
+          const artist = item.querySelector('.playlist-artist').textContent.toLowerCase();
+          if (title.includes(query) || artist.includes(query)) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    }
+  }
+
+  /**
+   * Update now playing display
+   */
+  function updateNowPlaying(playlistItem) {
+    const title = playlistItem.querySelector('.playlist-title').textContent;
+    const artist = playlistItem.querySelector('.playlist-artist').textContent;
+
+    // Update in modal
+    document.getElementById('current-song-title').textContent = title;
+    document.getElementById('current-song-artist').textContent = artist;
+
+    // Update widget
+    document.getElementById('widget-music-title').textContent = title;
+    document.getElementById('widget-music-subtitle').textContent = artist;
+
+    // Update global state
+    currentMusicTrack.title = title;
+    currentMusicTrack.artist = artist;
+  }
+
+  /**
+   * Setup World tab
+   */
+  function setupWorldTab() {
+    // Scene selector
+    const sceneSelect = document.getElementById('scene-type-select');
+    if (sceneSelect) {
+      // Set current scene
+      const activeScene = stateObjects.sceneMenuItems.find(s =>
+        s.element.classList.contains('menu-item-active')
+      );
+      if (activeScene) {
+        sceneSelect.value = activeScene.name.toLowerCase();
+      }
+
+      sceneSelect.addEventListener('change', (e) => {
+        const sceneName = e.target.value;
+        changeScene(sceneName);
+      });
+    }
+
+    // Weather buttons
+    const weatherButtons = document.querySelectorAll('[data-weather]');
+    weatherButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        weatherButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        changeWeather(btn.dataset.weather);
+      });
+    });
+
+    // Vehicle buttons
+    const vehicleButtons = document.querySelectorAll('[data-vehicle]');
+    vehicleButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        vehicleButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        changeVehicle(btn.dataset.vehicle);
+      });
+    });
+
+    // Apply changes button
+    const applyBtn = document.getElementById('apply-world-changes');
+    if (applyBtn) {
+      applyBtn.addEventListener('click', () => {
+        // Close modal after applying
+        setTimeout(() => toggleSettingsModal(), 300);
+      });
+    }
+  }
+
+  /**
+   * Change scene
+   */
+  function changeScene(sceneName) {
+    const scene = stateObjects.sceneMenuItems.find(s =>
+      s.name.toLowerCase() === sceneName.toLowerCase()
+    );
+    if (scene) {
+      scene.element.click();
+    }
+  }
+
+  /**
+   * Change weather
+   */
+  function changeWeather(weatherName) {
+    const weather = stateObjects.weatherMenuItems.find(w =>
+      w.name.toLowerCase() === weatherName.toLowerCase()
+    );
+    if (weather) {
+      weather.element.click();
+    }
+  }
+
+  /**
+   * Change vehicle
+   */
+  function changeVehicle(vehicleName) {
+    const vehicle = stateObjects.vehicleMenuItems.find(v =>
+      v.name.toLowerCase() === vehicleName.toLowerCase()
+    );
+    if (vehicle) {
+      vehicle.element.click();
+      setTimeout(updateStatsDisplay, 200);
+    }
+  }
+
+  /**
+   * Setup Settings tab
+   */
+  function setupSettingsTab() {
     // Autodrive toggle
-    const autodriveItem = document.querySelector('[data-control="autodrive"]');
-    if (autodriveItem) {
-      autodriveItem.addEventListener('click', () => {
-        const autodriveButton = document.getElementById('autodrive');
-        if (autodriveButton) {
-          autodriveButton.click();
-          updateCheckboxes();
+    const autodriveCheckbox = document.getElementById('autodrive-checkbox');
+    if (autodriveCheckbox) {
+      autodriveCheckbox.addEventListener('change', (e) => {
+        const autodriveBtn = stateObjects.autodriveButton;
+        if (autodriveBtn) {
+          autodriveBtn.click();
         }
       });
     }
 
     // Headlights toggle
-    const headlightsItem = document.querySelector('[data-control="headlights"]');
-    if (headlightsItem) {
-      headlightsItem.addEventListener('click', () => {
+    const headlightsCheckbox = document.getElementById('headlights-checkbox');
+    if (headlightsCheckbox) {
+      headlightsCheckbox.addEventListener('change', () => {
         simulateKeyPress('H');
-        setTimeout(updateCheckboxes, 100);
       });
     }
 
     // Show UI toggle
-    const showUIItem = document.querySelector('[data-control="showui"]');
-    if (showUIItem) {
-      showUIItem.addEventListener('click', () => {
+    const showUICheckbox = document.getElementById('show-ui-checkbox');
+    if (showUICheckbox) {
+      showUICheckbox.addEventListener('change', () => {
         simulateKeyPress('U');
-        setTimeout(updateCheckboxes, 100);
       });
     }
 
-    // Reset Vehicle button
-    const resetButton = document.querySelector('[data-action="reset"]');
-    if (resetButton) {
-      resetButton.addEventListener('click', () => {
+    // Input method buttons
+    const inputButtons = document.querySelectorAll('[data-input]');
+    inputButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        inputButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        changeInputMethod(btn.dataset.input);
+      });
+    });
+
+    // Reset vehicle button
+    const resetBtn = document.getElementById('reset-vehicle-btn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
         simulateKeyPress('R');
       });
     }
 
-    // Change Camera button
-    const cameraButton = document.querySelector('[data-action="camera"]');
-    if (cameraButton) {
-      cameraButton.addEventListener('click', () => {
+    // Change camera button
+    const cameraBtn = document.getElementById('change-camera-btn');
+    if (cameraBtn) {
+      cameraBtn.addEventListener('click', () => {
         simulateKeyPress('C');
       });
     }
-
-    // Scene expand/collapse
-    const sceneExpandButton = document.getElementById('scene-expand-button');
-    const sceneOptionList = document.getElementById('scene-option-list');
-    if (sceneExpandButton && sceneOptionList) {
-      sceneExpandButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const isExpanded = sceneOptionList.style.display === 'block';
-        sceneOptionList.style.display = isExpanded ? 'none' : 'block';
-        sceneExpandButton.querySelector('.expand-arrow').textContent = isExpanded ? '▼' : '▲';
-      });
-    }
-
-    // Weather expand/collapse
-    const weatherExpandButton = document.getElementById('weather-expand-button');
-    const weatherOptionList = document.getElementById('weather-option-list');
-    if (weatherExpandButton && weatherOptionList) {
-      weatherExpandButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const isExpanded = weatherOptionList.style.display === 'block';
-        weatherOptionList.style.display = isExpanded ? 'none' : 'block';
-        weatherExpandButton.querySelector('.expand-arrow').textContent = isExpanded ? '▼' : '▲';
-      });
-    }
-
-    // Vehicle buttons
-    const vehicleButtons = document.querySelectorAll('[data-vehicle]');
-    vehicleButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const vehicleType = button.dataset.vehicle;
-        changeVehicle(vehicleType);
-      });
-    });
-
-    // Input method buttons
-    const inputButtons = document.querySelectorAll('[data-input]');
-    inputButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const inputMethod = parseInt(button.dataset.input);
-        changeInputMethod(inputMethod);
-      });
-    });
-
-    // Volume slider
-    const volumeSlider = document.getElementById('volume-slider');
-    if (volumeSlider) {
-      volumeSlider.addEventListener('input', (e) => {
-        setVolume(parseFloat(e.target.value));
-      });
-    }
-
-    // Mute button
-    const muteButton = document.getElementById('mute-button');
-    if (muteButton) {
-      muteButton.addEventListener('click', toggleMute);
-    }
-
-    // Close button
-    const closeButton = document.getElementById('settings-close-button');
-    if (closeButton) {
-      closeButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleSettingsPanel();
-      });
-    }
-
-    // Click outside to close
-    document.addEventListener('click', (e) => {
-      const settingsPanel = document.getElementById('settings-panel');
-      const settingsIcon = document.getElementById('settings-menu-item');
-
-      if (settingsPanelOpen && settingsPanel && settingsIcon) {
-        // Check if click is outside both the panel and the settings icon
-        if (!settingsPanel.contains(e.target) && !settingsIcon.contains(e.target)) {
-          toggleSettingsPanel();
-        }
-      }
-    });
-
-    // Only start intervals if required elements exist
-    const settingsPanel = document.getElementById('settings-panel');
-    const menuBarLeft = document.getElementById('menu-bar-left');
-
-    if (settingsPanel && menuBarLeft) {
-      // Setup periodic updates to keep UI in sync
-      setInterval(() => {
-        // Safety check before each update
-        if (document.getElementById('settings-panel')) {
-          updateAllControls();
-        }
-      }, 500);
-
-      // Setup periodic visibility enforcement
-      setInterval(() => {
-        // Safety check before each update
-        if (document.getElementById('settings-panel')) {
-          ensureSettingsPanelVisible();
-        }
-      }, 500);
-    }
-
-    // Initialize scene and weather lists
-    setTimeout(initializeSceneList, 500);
-    setTimeout(initializeWeatherList, 500);
-
-    console.log('[Settings Panel] Event listeners setup');
-  }
-
-  /**
-   * Toggle settings panel open/closed
-   */
-  function toggleSettingsPanel() {
-    settingsPanelOpen = !settingsPanelOpen;
-
-    const panel = document.getElementById('settings-panel');
-    const menuItem = document.getElementById('settings-menu-item');
-    const pauseDom = document.getElementById('game-paused');
-
-    if (panel) {
-      panel.style.display = settingsPanelOpen ? 'block' : 'none';
-    }
-
-    if (menuItem) {
-      if (settingsPanelOpen) {
-        menuItem.classList.add('settings-active');
-      } else {
-        menuItem.classList.remove('settings-active');
-      }
-    }
-
-    // Pause/unpause game based on settings panel state
-    if (pauseDom) {
-      pauseDom.style.display = settingsPanelOpen ? 'block' : 'none';
-    }
-
-    // Update checkboxes when opening
-    if (settingsPanelOpen) {
-      updateCheckboxes();
-    }
-  }
-
-  /**
-   * Update checkbox states based on actual game state
-   */
-  function updateCheckboxes() {
-    // Autodrive - check if autodrive button has active class
-    const autodriveButton = document.getElementById('autodrive');
-    const autodriveCheckbox = document.getElementById('settings-autodrive-checkbox');
-    if (autodriveButton && autodriveCheckbox) {
-      const isActive = autodriveButton.classList.contains('autodrive-active');
-      if (isActive) {
-        autodriveCheckbox.classList.add('active');
-      } else {
-        autodriveCheckbox.classList.remove('active');
-      }
-    }
-
-    // Headlights - we'll need to track this with a custom state since there's no visible indicator
-    // For now, we'll just maintain internal state
-
-    // Show UI - check if main UI elements are visible
-    const uiElement = document.getElementById('autodrive');
-    const showUICheckbox = document.getElementById('settings-showui-checkbox');
-    if (uiElement && showUICheckbox) {
-      const isVisible = uiElement.style.display !== 'none' &&
-                       window.getComputedStyle(uiElement).display !== 'none';
-      if (isVisible) {
-        showUICheckbox.classList.add('active');
-      } else {
-        showUICheckbox.classList.remove('active');
-      }
-    }
-  }
-
-  /**
-   * Ensure settings panel and menu bar remain visible when UI is hidden
-   * This function can be called periodically to enforce this rule
-   */
-  function ensureSettingsPanelVisible() {
-    const settingsPanel = document.getElementById('settings-panel');
-    const menuBar = document.getElementById('menu-bar');
-
-    if (settingsPanel && typeof settingsPanelOpen !== 'undefined') {
-      // Only manipulate if panel exists
-      const computedStyle = window.getComputedStyle(settingsPanel);
-      if (settingsPanel.style.display === 'none' && settingsPanelOpen) {
-        settingsPanel.style.display = 'block';
-      }
-    }
-
-    if (menuBar) {
-      // Always make sure menu bar is not hidden by UI toggle
-      const computedStyle = window.getComputedStyle(menuBar);
-      if (menuBar.style.display === 'none') {
-        menuBar.style.display = 'flex';
-      }
-    }
-  }
-
-  /**
-   * Initialize scene list from game state
-   */
-  function initializeSceneList() {
-    const sceneOptionList = document.getElementById('scene-option-list');
-    if (!sceneOptionList) return;
-
-    // Use stored scene menu items from findStateObjects()
-    const scenes = stateObjects.sceneMenuItems || [];
-
-    // If we have stored scenes, populate the list
-    if (scenes.length > 0) {
-      sceneOptionList.innerHTML = '';
-      scenes.forEach(scene => {
-        const option = document.createElement('div');
-        option.className = 'settings-option-item';
-        option.textContent = scene.name;
-        option.addEventListener('click', () => {
-          scene.element.click();
-          updateSceneDisplay();
-          sceneOptionList.style.display = 'none';
-          document.getElementById('scene-expand-button').querySelector('.expand-arrow').textContent = '▼';
-        });
-        sceneOptionList.appendChild(option);
-      });
-    } else {
-      console.warn('[Settings Panel] No scene items found');
-    }
-
-    updateSceneDisplay();
-  }
-
-  /**
-   * Initialize weather list from game state
-   */
-  function initializeWeatherList() {
-    const weatherOptionList = document.getElementById('weather-option-list');
-    if (!weatherOptionList) return;
-
-    // Use stored weather menu items from findStateObjects()
-    const weathers = stateObjects.weatherMenuItems || [];
-
-    // If we have stored weathers, populate the list
-    if (weathers.length > 0) {
-      weatherOptionList.innerHTML = '';
-      weathers.forEach(weather => {
-        const option = document.createElement('div');
-        option.className = 'settings-option-item';
-        option.textContent = weather.name;
-        option.addEventListener('click', () => {
-          weather.element.click();
-          updateWeatherDisplay();
-          weatherOptionList.style.display = 'none';
-          document.getElementById('weather-expand-button').querySelector('.expand-arrow').textContent = '▼';
-        });
-        weatherOptionList.appendChild(option);
-      });
-    } else {
-      console.warn('[Settings Panel] No weather items found');
-    }
-
-    updateWeatherDisplay();
-  }
-
-  /**
-   * Update scene display in settings panel
-   */
-  function updateSceneDisplay() {
-    const sceneNameElement = document.getElementById('scene-current-name');
-    if (!sceneNameElement) return;
-
-    // Use stored scene menu items from findStateObjects()
-    const sceneItems = stateObjects.sceneMenuItems || [];
-    let foundScene = false;
-
-    sceneItems.forEach(sceneItem => {
-      if (sceneItem.element.classList.contains('menu-item-active')) {
-        sceneNameElement.textContent = sceneItem.name;
-        foundScene = true;
-      }
-    });
-
-    if (!foundScene) {
-      sceneNameElement.textContent = 'Unknown';
-    }
-  }
-
-  /**
-   * Update weather display in settings panel
-   */
-  function updateWeatherDisplay() {
-    const weatherNameElement = document.getElementById('weather-current-name');
-    if (!weatherNameElement) return;
-
-    // Use stored weather menu items from findStateObjects()
-    const weatherItems = stateObjects.weatherMenuItems || [];
-    let foundWeather = false;
-
-    weatherItems.forEach(weatherItem => {
-      if (weatherItem.element.classList.contains('menu-item-active')) {
-        weatherNameElement.textContent = weatherItem.name;
-        foundWeather = true;
-      }
-    });
-
-    if (!foundWeather) {
-      weatherNameElement.textContent = 'Unknown';
-    }
-  }
-
-  /**
-   * Change vehicle type
-   */
-  function changeVehicle(vehicleType) {
-    // Use stored vehicle menu items from findStateObjects()
-    const vehicleMenuItems = stateObjects.vehicleMenuItems || [];
-
-    vehicleMenuItems.forEach(vehicleItem => {
-      const vehicleName = vehicleItem.name.toLowerCase();
-      if (vehicleName === vehicleType || vehicleName.includes(vehicleType)) {
-        vehicleItem.element.click();
-        setTimeout(updateVehicleButtons, 100);
-      }
-    });
-  }
-
-  /**
-   * Update vehicle button states
-   */
-  function updateVehicleButtons() {
-    const vehicleButtons = document.querySelectorAll('[data-vehicle]');
-    const vehicleMenuItems = stateObjects.vehicleMenuItems || [];
-
-    // Clear all active states
-    vehicleButtons.forEach(button => {
-      button.classList.remove('active');
-    });
-
-    // Find active vehicle
-    vehicleMenuItems.forEach(vehicleItem => {
-      if (vehicleItem.element.classList.contains('menu-item-active')) {
-        const vehicleName = vehicleItem.name.toLowerCase();
-        vehicleButtons.forEach(button => {
-          if (vehicleName.includes(button.dataset.vehicle)) {
-            button.classList.add('active');
-          }
-        });
-      }
-    });
   }
 
   /**
    * Change input method
    */
-  function changeInputMethod(inputMethod) {
-    // Use stored input menu items from findStateObjects()
-    const inputMenuItems = stateObjects.inputMenuItems || [];
-
-    inputMenuItems.forEach(inputItem => {
-      const inputName = inputItem.name.toLowerCase();
-      // Input method: 1 = mouse, 2 = keyboard
-      if ((inputMethod === 1 && inputName.includes('mouse')) ||
-          (inputMethod === 2 && inputName.includes('keyboard'))) {
-        inputItem.element.click();
-        setTimeout(updateInputButtons, 100);
-      }
-    });
-  }
-
-  /**
-   * Update input method button states
-   */
-  function updateInputButtons() {
-    const inputButtons = document.querySelectorAll('[data-input]');
-    const inputMenuItems = stateObjects.inputMenuItems || [];
-
-    // Clear all active states
-    inputButtons.forEach(button => {
-      button.classList.remove('active');
-    });
-
-    // Find active input method
-    inputMenuItems.forEach(inputItem => {
-      if (inputItem.element.classList.contains('menu-item-active')) {
-        const inputName = inputItem.name.toLowerCase();
-        inputButtons.forEach(button => {
-          const method = parseInt(button.dataset.input);
-          if ((method === 1 && inputName.includes('mouse')) ||
-              (method === 2 && inputName.includes('keyboard'))) {
-            button.classList.add('active');
-          }
-        });
-      }
-    });
-  }
-
-  /**
-   * Set audio volume
-   */
-  function setVolume(volume) {
-    // Store volume for mute/unmute
-    if (volume > 0) {
-      stateObjects.previousVolume = volume;
-    }
-
-    // Find and click on audio level controls in the menu
-    // Try to interact with the volume slider in the original menu if it exists
-    const volumeSliders = document.querySelectorAll('input[type="range"]');
-    volumeSliders.forEach(slider => {
-      if (slider.id !== 'volume-slider') { // Not our settings panel slider
-        slider.value = volume;
-        slider.dispatchEvent(new Event('input', { bubbles: true }));
-        slider.dispatchEvent(new Event('change', { bubbles: true }));
-      }
-    });
-
-    updateVolumeIcon(volume);
-  }
-
-  /**
-   * Toggle mute/unmute
-   */
-  function toggleMute() {
-    const volumeSlider = document.getElementById('volume-slider');
-    if (!volumeSlider) return;
-
-    const currentVolume = parseFloat(volumeSlider.value);
-
-    if (currentVolume > 0) {
-      // Mute: store current volume and set to 0
-      stateObjects.previousVolume = currentVolume;
-      volumeSlider.value = 0;
-      setVolume(0);
-    } else {
-      // Unmute: restore previous volume (or default to 0.5)
-      const restoreVolume = stateObjects.previousVolume || 0.5;
-      volumeSlider.value = restoreVolume;
-      setVolume(restoreVolume);
+  function changeInputMethod(method) {
+    const inputItem = stateObjects.inputMenuItems.find(i =>
+      i.name.toLowerCase() === method.toLowerCase()
+    );
+    if (inputItem) {
+      inputItem.element.click();
     }
   }
 
   /**
-   * Update volume icon based on current volume
-   */
-  function updateVolumeIcon(volume) {
-    const volumeIcon = document.getElementById('volume-icon');
-    if (!volumeIcon) return;
-
-    if (volume === 0) {
-      volumeIcon.src = './static/media/vol_off.11497865.svg';
-    } else {
-      volumeIcon.src = './static/media/vol_high.30de055e.svg';
-    }
-  }
-
-  /**
-   * Update all controls to match current game state
-   */
-  function updateAllControls() {
-    // Early exit if settings panel doesn't exist
-    if (!document.getElementById('settings-panel')) {
-      return;
-    }
-
-    updateCheckboxes();
-    updateSceneDisplay();
-    updateWeatherDisplay();
-    updateVehicleButtons();
-    updateInputButtons();
-
-    // Update volume slider and icon
-    const volumeSlider = document.getElementById('volume-slider');
-    if (volumeSlider) {
-      updateVolumeIcon(parseFloat(volumeSlider.value));
-    }
-  }
-
-  /**
-   * Simulate a keyboard press to trigger game shortcuts
+   * Simulate key press
    */
   function simulateKeyPress(key) {
     const event = new KeyboardEvent('keydown', {
@@ -1065,19 +788,150 @@
     });
     document.dispatchEvent(event);
 
-    // Also trigger keyup
-    const eventUp = new KeyboardEvent('keyup', {
-      key: key,
-      code: 'Key' + key,
-      keyCode: key.charCodeAt(0),
-      which: key.charCodeAt(0),
-      bubbles: true,
-      cancelable: true
-    });
-    setTimeout(() => document.dispatchEvent(eventUp), 50);
+    setTimeout(() => {
+      const eventUp = new KeyboardEvent('keyup', {
+        key: key,
+        code: 'Key' + key,
+        keyCode: key.charCodeAt(0),
+        which: key.charCodeAt(0),
+        bubbles: true,
+        cancelable: true
+      });
+      document.dispatchEvent(eventUp);
+    }, 50);
   }
 
-  // Initialize on page load
+  /**
+   * Toggle settings modal
+   */
+  function toggleSettingsModal() {
+    settingsModalOpen = !settingsModalOpen;
+
+    const modal = document.getElementById('settings-modal');
+    const overlay = document.getElementById('modal-overlay');
+    const pauseOverlay = document.getElementById('game-paused');
+
+    if (modal) {
+      modal.style.display = settingsModalOpen ? 'flex' : 'none';
+    }
+
+    if (overlay) {
+      overlay.classList.toggle('active', settingsModalOpen);
+    }
+
+    if (pauseOverlay) {
+      pauseOverlay.style.display = settingsModalOpen ? 'block' : 'none';
+    }
+
+    if (settingsModalOpen) {
+      updateStatsDisplay();
+    }
+  }
+
+  /**
+   * Open settings modal to specific tab
+   */
+  function openSettingsModal(tabName) {
+    if (!settingsModalOpen) {
+      toggleSettingsModal();
+    }
+    switchToTab(tabName);
+  }
+
+  /**
+   * Start autodrive monitoring
+   */
+  function startAutodriveMonitoring() {
+    setInterval(() => {
+      const autodriveBtn = stateObjects.autodriveButton;
+      const statusDiv = document.querySelector('#autodrive-status .autodrive-state');
+      const checkbox = document.getElementById('autodrive-checkbox');
+
+      if (autodriveBtn && statusDiv) {
+        const isActive = autodriveBtn.classList.contains('autodrive-active');
+        statusDiv.textContent = isActive ? 'ON' : 'OFF';
+        statusDiv.classList.toggle('active', isActive);
+
+        if (checkbox) {
+          checkbox.checked = isActive;
+        }
+      }
+    }, 500);
+  }
+
+  /**
+   * Start trajectory rendering
+   */
+  function startTrajectoryRendering() {
+    const canvas = document.getElementById('trajectory-canvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+
+    function render() {
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Try to get position from game state
+      try {
+        if (window.p && window.p.car && window.p.car.position) {
+          const pos = window.p.car.position;
+          trajectoryPathData.push({ x: pos.x, z: pos.z });
+
+          // Keep only last 50 points
+          if (trajectoryPathData.length > 50) {
+            trajectoryPathData.shift();
+          }
+        }
+      } catch (error) {
+        // Game state not available
+      }
+
+      // Draw trajectory path
+      if (trajectoryPathData.length > 1) {
+        ctx.strokeStyle = '#00d9ff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+
+        // Scale and center points
+        const scaleX = canvas.width / 1000;
+        const scaleZ = canvas.height / 1000;
+        const centerX = canvas.width / 2;
+        const centerZ = canvas.height / 2;
+
+        trajectoryPathData.forEach((point, i) => {
+          const x = centerX + point.x * scaleX;
+          const z = centerZ + point.z * scaleZ;
+
+          if (i === 0) {
+            ctx.moveTo(x, z);
+          } else {
+            ctx.lineTo(x, z);
+          }
+        });
+
+        ctx.stroke();
+
+        // Draw arrowhead at current position
+        if (trajectoryPathData.length > 0) {
+          const lastPoint = trajectoryPathData[trajectoryPathData.length - 1];
+          const x = centerX + lastPoint.x * scaleX;
+          const z = centerZ + lastPoint.z * scaleZ;
+
+          ctx.fillStyle = '#00d9ff';
+          ctx.beginPath();
+          ctx.arc(x, z, 4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    render();
+  }
+
+  // Initialize
   init();
 
 })();
