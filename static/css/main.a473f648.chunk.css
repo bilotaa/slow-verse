@@ -135,6 +135,7 @@ body {
       rgba(0, 0, 0, 0.2),
       rgba(0, 0, 0, 0.4666666666666667)
     );
+    display: none !important;
   }
   #game-error,
   #game-ui-backing {
@@ -373,7 +374,7 @@ body {
     text-align: center;
     top: 25vh;
     transform: translateY(-50%);
-    display: flex;
+    display: none !important;
     justify-content: center;
     font-weight: 1000;
     grid-gap: 4vh;
