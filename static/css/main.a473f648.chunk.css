@@ -64,7 +64,11 @@ body {
   .render-canvas {
     width: 100% !important;
     height: 100% !important;
-    background-color: #222;
+    background-color: #0a0a0f;
+    background-image:
+      linear-gradient(rgba(0, 217, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 217, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
     outline: none;
   }
   #ui-debug {
